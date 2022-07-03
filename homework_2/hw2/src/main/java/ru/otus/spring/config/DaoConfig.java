@@ -22,7 +22,7 @@ public class DaoConfig {
         } catch (IOException e)
         {
             System.out.println(e);
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }

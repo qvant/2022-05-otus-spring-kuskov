@@ -8,11 +8,14 @@ import java.io.*;
 @Service
 public class QuestionPresenterConsole implements QuestionPresenter{
 
-    private final QuestionConverter questionConverter;
+    private String convertQuestionToString(Question question){
+        return question.getText() + "? " + String.join(", ", question.getAnswers());
+    }
+
     @Override
     public String ask(Question question) {
         String answer;
-        System.out.println(this.questionConverter.convertQuestionToString(question));
+        System.out.println(this.convertQuestionToString(question));
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(System.in));
         try {
             answer = bufferedReader.readLine();
@@ -25,10 +28,6 @@ public class QuestionPresenterConsole implements QuestionPresenter{
     @Override
     public void print(String text) {
         System.out.println(text);
-    }
-
-    public QuestionPresenterConsole (){
-        this.questionConverter = new QuestionConverter();
     }
 
 
