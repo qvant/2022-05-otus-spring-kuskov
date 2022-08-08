@@ -1,0 +1,18 @@
+application:
+  filepath: questions_sample.csv
+  languages:
+    - ru
+    - en
+exam:
+  passagePercent: 60
+  questionNumber: 5
+spring:
+  shell:
+    interactive:
+      enabled: false
+  main:
+    allow-circular-references: true
+    web-application-type: none
+logging:
+  level:
+    root: ERROR
