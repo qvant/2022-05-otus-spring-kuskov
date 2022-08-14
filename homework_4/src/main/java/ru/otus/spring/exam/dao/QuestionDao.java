@@ -2,6 +2,8 @@ package ru.otus.spring.exam.dao;
 
 import ru.otus.spring.exam.domain.Question;
 
+import java.util.List;
+
 public interface QuestionDao {
-    Question[] readAll(String language);
+    List<Question> readAll();
 }

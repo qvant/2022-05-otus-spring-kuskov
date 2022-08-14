@@ -4,24 +4,26 @@ import org.springframework.stereotype.Service;
 import ru.otus.spring.exam.domain.Question;
 import ru.otus.spring.exam.dao.QuestionDao;
 
+import java.util.List;
+
 @Service
-public class QuestionServiceImpl implements QuestionService{
+public class QuestionServiceImpl implements QuestionService {
     private final QuestionDao dao;
 
-    public QuestionServiceImpl(QuestionDao dao)
-    {
+    public QuestionServiceImpl(QuestionDao dao) {
         this.dao = dao;
     }
 
-    public  Question[] readAll(String language) {
-        return this.dao.readAll(language);
+    public List<Question> readAll() {
+        return this.dao.readAll();
     }
 
     public void ask(Question question) {
 
     }
 
-    public Boolean checkAnswer(Question question, String answer) {
-        return question.getAnswers()[question.getCorrectAnswerIndex()].equals(answer);
+    public Boolean checkAnswer(Question question, Integer answerNumber) {
+        return question.getAnswers().get(answerNumber).isCorrect();
+
     }
 }

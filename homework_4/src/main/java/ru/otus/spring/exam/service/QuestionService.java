@@ -2,8 +2,12 @@ package ru.otus.spring.exam.service;
 
 import ru.otus.spring.exam.domain.Question;
 
+import java.util.List;
+
 public interface QuestionService {
-    Question[] readAll(String language);
+    List<Question> readAll();
+
     void ask(Question question);
-    Boolean checkAnswer(Question question, String answer);
+
+    Boolean checkAnswer(Question question, Integer answerNumber);
 }

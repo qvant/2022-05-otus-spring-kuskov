@@ -2,13 +2,15 @@ package ru.otus.spring.exam.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import ru.otus.spring.exam.dao.QuestionDao;
 import ru.otus.spring.exam.dao.QuestionDaoCSV;
+import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
+import ru.otus.spring.exam.providers.QuestionsFileNameProviderImpl;
 
 import java.util.List;
 
-@Component
+@Configuration
 @ConfigurationProperties("application")
 public class DaoConfig {
     private String filePath;
@@ -17,35 +19,12 @@ public class DaoConfig {
         this.languages = languages;
     }
 
-    private class File {
-        private String path;
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-    }
-
-    private class L18n {
-        private List<String> languages;
-
-        public List<String> getLanguages() {
-            return languages;
-        }
-
-        public void setLanguages(List<String> languages) {
-            this.languages = languages;
-        }
-    }
-
     private List<String> languages;
 
     @Bean
     public QuestionDao questionDao() {
-        return new QuestionDaoCSV(this.filePath, this.languages);
+        QuestionsFileNameProvider questionsFileNameProvider = new QuestionsFileNameProviderImpl(this.filePath, this.languages);
+        return new QuestionDaoCSV(questionsFileNameProvider);
     }
 
     public void setFilePath(String filePath) {
