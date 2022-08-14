@@ -1,7 +1,6 @@
 application:
   filepath: questions_sample.csv
   languages:
-    - ru
     - en
 exam:
   passagePercent: 60
@@ -9,12 +8,10 @@ exam:
 spring:
   shell:
     interactive:
-      enabled: true
+      enabled: false
   main:
     allow-circular-references: true
     web-application-type: none
-  messages:
-    basename: messages
 logging:
   level:
     root: ERROR

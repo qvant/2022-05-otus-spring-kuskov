@@ -1,6 +1,7 @@
-package ru.otus.spring.dao;
+package ru.otus.spring.exam.dao;
 
-import ru.otus.spring.domain.Question;
+import ru.otus.spring.exam.domain.Answer;
+import ru.otus.spring.exam.domain.Question;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,34 +12,25 @@ import java.util.List;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
 
 public class QuestionDaoCSV implements QuestionDao {
 
-    private final String fileName;
-    private final List<String> supportedLanguages;
+    private final QuestionsFileNameProvider questionsFileNameProvider;
 
-    public QuestionDaoCSV(String fileName, List<String> supportedLanguages) {
-        this.fileName = fileName;
-        this.supportedLanguages = supportedLanguages;
+    public QuestionDaoCSV(QuestionsFileNameProvider questionsFileNameProvider) {
+        this.questionsFileNameProvider = questionsFileNameProvider;
     }
 
-    public Question[] readAll(String language) {
+    public List<Question> readAll() {
         ClassLoader classLoader = getClass().getClassLoader();
-        String localizedfileName;
-        localizedfileName = this.fileName;
-        for (String sypportedLanguage : this.supportedLanguages
-        ) {
-            if (language.equals(sypportedLanguage)) {
-                localizedfileName = fileName.substring(0, fileName.length() - 4) + "_" + language +
-                        fileName.substring(fileName.length() - 4);
-                break;
-            }
-        }
+        String fileName;
+        fileName = this.questionsFileNameProvider.getFileName();
 
         try (
-                InputStream inputStream = classLoader.getResourceAsStream(localizedfileName);
+                InputStream inputStream = classLoader.getResourceAsStream(fileName);
                 InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                CSVReader reader = new CSVReader(streamReader);
+                CSVReader reader = new CSVReader(streamReader)
         ) {
             String[] lines;
             List<Question> res = new ArrayList<Question>();
@@ -53,19 +45,19 @@ public class QuestionDaoCSV implements QuestionDao {
                     throw new RuntimeException(err);
                 }
                 if (lines != null) {
-                    String[] answers = new String[lines.length - 2];
+                    List<Answer> answers = new ArrayList<Answer>();
+                    Integer correctAnswerIndex = Integer.valueOf(lines[1].trim());
                     for (int i = 0; i < lines.length - 2; i++
                     ) {
-                        answers[i] = lines[i + 2].trim();
+                        answers.add(new Answer(lines[i + 2].trim(), (i==correctAnswerIndex)));
                     }
                     String questionText = lines[0].trim();
-                    Integer correctAnswerIndex = Integer.valueOf(lines[1].trim());
                     res.add(new Question(questionText, answers, correctAnswerIndex));
                 } else {
                     break;
                 }
             }
-            return res.toArray(new Question[0]);
+            return res;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
