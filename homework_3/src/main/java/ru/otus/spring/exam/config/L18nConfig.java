@@ -9,7 +9,7 @@ import ru.otus.spring.exam.service.L18nService;
 import java.util.Locale;
 
 @Configuration
-@ConfigurationProperties("l18n")
+@ConfigurationProperties("application")
 public class L18nConfig {
     private Locale locale;
 

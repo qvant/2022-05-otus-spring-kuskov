@@ -8,23 +8,23 @@ import ru.otus.spring.exam.dao.QuestionDaoCSV;
 import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
 import ru.otus.spring.exam.providers.QuestionsFileNameProviderImpl;
 
-import java.util.List;
+import java.util.Locale;
 
 @Configuration
 @ConfigurationProperties("application")
 public class DaoConfig {
     private String filePath;
+    private Locale locale;
 
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
-    }
-
-    private List<String> languages;
 
     @Bean
-    public QuestionDao questionDao() {
-        QuestionsFileNameProvider questionsFileNameProvider = new QuestionsFileNameProviderImpl(this.filePath, this.languages);
+    public QuestionDao questionDao(L18nConfig l18nConfig) {
+        QuestionsFileNameProvider questionsFileNameProvider = new QuestionsFileNameProviderImpl(this.filePath, this.locale);
         return new QuestionDaoCSV(questionsFileNameProvider);
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     public void setFilePath(String filePath) {

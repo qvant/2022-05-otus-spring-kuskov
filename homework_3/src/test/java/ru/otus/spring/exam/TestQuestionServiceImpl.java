@@ -47,7 +47,7 @@ class TestQuestionServiceImpl {
     void testQuestionsText() {
         List<Question> q = questionService.readAll();
 
-        assertEquals("1 + 1", q.get(0).getText(),
+        assertEquals("How much is 1 + 1", q.get(0).getText(),
                 "Question text doesn't match");
     }
 
