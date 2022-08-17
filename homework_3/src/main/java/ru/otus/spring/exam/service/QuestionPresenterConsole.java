@@ -9,7 +9,7 @@ public class QuestionPresenterConsole implements QuestionPresenter {
     private final QuestionConverter questionConverter;
     private final IOService ioService;
 
-    public QuestionPresenterConsole(QuestionConverter questionConverter, IOService ioService) throws java.io.UnsupportedEncodingException {
+    public QuestionPresenterConsole(QuestionConverter questionConverter, IOService ioService){
         this.questionConverter = questionConverter;
         this.ioService = ioService;
     }

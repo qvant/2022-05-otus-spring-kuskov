@@ -3,6 +3,8 @@ application:
   languages:
     - ru
     - en
+l18n:
+  locale: en
 exam:
   passagePercent: 60
   questionNumber: 5

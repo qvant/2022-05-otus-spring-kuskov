@@ -1,15 +1,12 @@
-package ru.otus.spring.exam.test;
+package ru.otus.spring.exam;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationContext;
 import ru.otus.spring.exam.domain.Answer;
 import ru.otus.spring.exam.domain.Question;
 import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
@@ -21,22 +18,19 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class)
 class TestQuestionServiceImpl {
 
+    @Autowired
     private QuestionServiceImpl questionService;
     @MockBean
-    IOService ioService;
+    private IOService ioService;
     @MockBean
-    QuestionsFileNameProvider questionsFileNameProvider;
-    @Autowired
-    ApplicationContext context;
+    private QuestionsFileNameProvider questionsFileNameProvider;
 
     @BeforeEach
     void setUp() {
         Mockito.when(ioService.read()).thenReturn("A");
         Mockito.when(questionsFileNameProvider.getFileName()).thenReturn("questions_sample_test.csv");
-        questionService = context.getBean(QuestionServiceImpl.class);
     }
 
     @Test

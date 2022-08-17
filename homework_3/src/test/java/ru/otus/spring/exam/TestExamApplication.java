@@ -1,4 +1,4 @@
-package ru.otus.spring.exam.test;
+package ru.otus.spring.exam;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
