@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.spring.exam.domain.Answer;
 import ru.otus.spring.exam.domain.Question;
-import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
+import ru.otus.spring.exam.providers.QuestionsFileNameProviderImpl;
 import ru.otus.spring.exam.service.IOService;
 import ru.otus.spring.exam.service.QuestionServiceImpl;
 
@@ -25,12 +25,12 @@ class TestQuestionServiceImpl {
     @MockBean
     private IOService ioService;
     @MockBean
-    private QuestionsFileNameProvider questionsFileNameProvider;
+    private QuestionsFileNameProviderImpl questionsFileNameProviderImpl;
 
     @BeforeEach
     void setUp() {
         Mockito.when(ioService.read()).thenReturn("A");
-        Mockito.when(questionsFileNameProvider.getFileName()).thenReturn("questions_sample_test.csv");
+        Mockito.when(questionsFileNameProviderImpl.getFileName()).thenReturn("questions_sample_test.csv");
     }
 
     @Test

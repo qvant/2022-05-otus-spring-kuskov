@@ -1,7 +1,12 @@
 package ru.otus.spring.exam.dao;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.exam.domain.Answer;
 import ru.otus.spring.exam.domain.Question;
+import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
-import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
-
+@Service
 public class QuestionDaoCSV implements QuestionDao {
 
     private final QuestionsFileNameProvider questionsFileNameProvider;
@@ -22,6 +24,8 @@ public class QuestionDaoCSV implements QuestionDao {
         this.questionsFileNameProvider = questionsFileNameProvider;
     }
 
+
+    @Bean
     public List<Question> readAll() {
         ClassLoader classLoader = getClass().getClassLoader();
         String fileName;

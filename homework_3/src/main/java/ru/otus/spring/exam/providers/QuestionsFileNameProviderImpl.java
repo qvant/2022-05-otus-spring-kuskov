@@ -2,16 +2,16 @@ package ru.otus.spring.exam.providers;
 
 import java.util.Locale;
 
-public class QuestionsFileNameProviderImpl implements QuestionsFileNameProvider {
+public class QuestionsFileNameProviderImpl implements QuestionsFileNameProvider
+{
 
     private final String fileName;
     private final Locale locale;
 
     @Override
     public String getFileName() {
-        String localizedFileName = this.fileName;
         String language = this.locale.getLanguage();
-        localizedFileName = fileName.substring(0, fileName.length() - 4) + "_" + language + fileName.substring(fileName.length() - 4);
+        String localizedFileName = this.fileName.substring(0, this.fileName.length() - 4) + "_" + language + this.fileName.substring(this.fileName.length() - 4);
         return localizedFileName;
     }
 
