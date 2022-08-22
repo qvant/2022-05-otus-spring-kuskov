@@ -1,4 +1,4 @@
-package ru.otus.spring.exam;
+package ru.otus.spring.exam.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

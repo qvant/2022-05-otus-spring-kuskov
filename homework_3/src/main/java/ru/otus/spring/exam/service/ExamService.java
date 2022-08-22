@@ -37,7 +37,7 @@ public class ExamService implements CommandLineRunner {
         List<Question> questions = questionService.readAll();
         Student student = this.createStudent();
         TestResult testResult = this.askQuestions(questions);
-        this.ShowResults(testResult, student);
+        this.showResults(testResult, student);
     }
 
     private Student createStudent() {
@@ -54,19 +54,19 @@ public class ExamService implements CommandLineRunner {
             String answer = questionPresenter.ask(questions.get(i));
             try {
                 if (questionService.checkAnswer(questions.get(i), Integer.parseInt(answer))) {
-                    testResult.AddCorrectAnswer();
+                    testResult.addCorrectAnswer();
                 } else {
-                    testResult.AddIncorrectAnswer();
+                    testResult.addIncorrectAnswer();
                 }
             } catch (Exception exception){
                 this.ioService.print(l18nService.getMessage("errors.wrong_code"));
-                testResult.AddIncorrectAnswer();
+                testResult.addIncorrectAnswer();
             }
         }
         return testResult;
     }
 
-    private void ShowResults(TestResult testResult, Student student) {
+    private void showResults(TestResult testResult, Student student) {
         if (testResult.isPassed()) {
             ioService.printWithParameters(l18nService.getMessage("results.succeed"),
                     student.getFirstName(), student.getLastName(), testResult.getCorrectAnswers(), questionNumber);

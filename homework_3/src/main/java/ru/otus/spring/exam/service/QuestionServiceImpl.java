@@ -18,11 +18,7 @@ public class QuestionServiceImpl implements QuestionService {
         return this.dao.readAll();
     }
 
-    public void ask(Question question) {
-
-    }
-
-    public Boolean checkAnswer(Question question, Integer answerNumber) {
+    public boolean checkAnswer(Question question, int answerNumber) {
         return question.getAnswers().get(answerNumber).isCorrect();
 
     }
