@@ -4,7 +4,7 @@ import java.util.Locale;
 
 public class LocaleProviderImpl implements LocaleProvider {
 
-    private Locale locale;
+    private final Locale locale;
 
     public LocaleProviderImpl(Locale locale) {
         this.locale = locale;
