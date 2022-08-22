@@ -1,5 +1,6 @@
 application:
   filepath: questions_sample.csv
+l18n:
   locale: en
 exam:
   passagePercent: 60

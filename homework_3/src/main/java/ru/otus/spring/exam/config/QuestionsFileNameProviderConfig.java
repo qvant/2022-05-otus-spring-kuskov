@@ -3,6 +3,7 @@ package ru.otus.spring.exam.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.spring.exam.providers.LocaleProvider;
 import ru.otus.spring.exam.providers.QuestionsFileNameProvider;
 import ru.otus.spring.exam.providers.QuestionsFileNameProviderImpl;
 
@@ -23,7 +24,7 @@ public class QuestionsFileNameProviderConfig {
     }
 
     @Bean
-    public QuestionsFileNameProvider questionsFileNameProvider(){
-        return new QuestionsFileNameProviderImpl(this.filePath, this.locale);
+    public QuestionsFileNameProvider questionsFileNameProvider(LocaleProvider localeProvider) {
+        return new QuestionsFileNameProviderImpl(this.filePath, localeProvider.getLocale());
     }
 }
