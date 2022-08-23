@@ -10,8 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.spring.exam.domain.Answer;
 import ru.otus.spring.exam.domain.Question;
 import ru.otus.spring.exam.providers.QuestionsFileNameProviderImpl;
-import ru.otus.spring.exam.service.IOService;
-import ru.otus.spring.exam.service.QuestionServiceImpl;
 
 import java.util.List;
 
