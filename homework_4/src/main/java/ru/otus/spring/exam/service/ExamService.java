@@ -1,7 +1,6 @@
 package ru.otus.spring.exam.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.exam.domain.Question;
 import ru.otus.spring.exam.domain.Student;
@@ -11,6 +10,7 @@ import java.util.List;
 
 @Component
 public class ExamService {
+
     private final QuestionService questionService;
     private final L18nService l18nService;
     private final QuestionPresenter questionPresenter;
@@ -31,19 +31,12 @@ public class ExamService {
         this.ioService = ioService;
     }
 
-    public void run(Student student){
+
+    public void run(Student student)  {
 
         List<Question> questions = questionService.readAll();
         TestResult testResult = this.askQuestions(questions);
-        this.ShowResults(testResult, student);
-    }
-
-    public Student createStudent() {
-        ioService.print(l18nService.getMessage("questions.first_name"));
-        String firstName = ioService.read();
-        ioService.print(l18nService.getMessage("questions.last_name"));
-        String lastName = ioService.read();
-        return new Student(lastName, firstName);
+        this.showResults(testResult, student);
     }
 
     private TestResult askQuestions(List<Question> questions) {
@@ -52,19 +45,19 @@ public class ExamService {
             String answer = questionPresenter.ask(questions.get(i));
             try {
                 if (questionService.checkAnswer(questions.get(i), Integer.parseInt(answer))) {
-                    testResult.AddCorrectAnswer();
+                    testResult.addCorrectAnswer();
                 } else {
-                    testResult.AddIncorrectAnswer();
+                    testResult.addIncorrectAnswer();
                 }
             } catch (Exception exception){
                 this.ioService.print(l18nService.getMessage("errors.wrong_code"));
-                testResult.AddIncorrectAnswer();
+                testResult.addIncorrectAnswer();
             }
         }
         return testResult;
     }
 
-    private void ShowResults(TestResult testResult, Student student) {
+    private void showResults(TestResult testResult, Student student) {
         if (testResult.isPassed()) {
             ioService.printWithParameters(l18nService.getMessage("results.succeed"),
                     student.getFirstName(), student.getLastName(), testResult.getCorrectAnswers(), questionNumber);

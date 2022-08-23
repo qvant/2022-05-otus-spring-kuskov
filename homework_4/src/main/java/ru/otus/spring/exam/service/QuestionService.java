@@ -7,7 +7,5 @@ import java.util.List;
 public interface QuestionService {
     List<Question> readAll();
 
-    void ask(Question question);
-
-    Boolean checkAnswer(Question question, Integer answerNumber);
+    boolean checkAnswer(Question question, int answerNumber);
 }

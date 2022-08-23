@@ -11,12 +11,12 @@ public class TestResult {
         this.passagePercent = passagePercent;
     }
 
-    public void AddCorrectAnswer() {
+    public void addCorrectAnswer() {
         this.correctAnswers++;
         this.totalAnswers++;
     }
 
-    public void AddIncorrectAnswer() {
+    public void addIncorrectAnswer() {
         this.totalAnswers++;
     }
 
