@@ -21,13 +21,10 @@ class TestQuestionServiceImpl {
     @Autowired
     private QuestionServiceImpl questionService;
     @MockBean
-    private IOService ioService;
-    @MockBean
     private QuestionsFileNameProviderImpl questionsFileNameProviderImpl;
 
     @BeforeEach
     void setUp() {
-        Mockito.when(ioService.read()).thenReturn("A");
         Mockito.when(questionsFileNameProviderImpl.getFileName()).thenReturn("questions_sample_test.csv");
     }
 
