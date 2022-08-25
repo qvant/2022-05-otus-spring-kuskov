@@ -25,6 +25,6 @@ public class QuestionsFileNameProviderConfig {
 
     @Bean
     public QuestionsFileNameProvider questionsFileNameProvider(LocaleProvider localeProvider) {
-        return new QuestionsFileNameProviderImpl(this.filePath, localeProvider.getLocale());
+        return new QuestionsFileNameProviderImpl(this.filePath, localeProvider);
     }
 }

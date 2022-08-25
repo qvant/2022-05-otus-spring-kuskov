@@ -1,20 +1,19 @@
 package ru.otus.spring.exam.service;
 
 import org.springframework.context.MessageSource;
-
-import java.util.Locale;
+import ru.otus.spring.exam.providers.LocaleProvider;
 
 public class L18nService {
     private final MessageSource messageSource;
-    private final Locale locale;
+    private final LocaleProvider localeProvider;
 
-    public L18nService(MessageSource messageSource, Locale locale) {
+    public L18nService(MessageSource messageSource, LocaleProvider localeProvider) {
         this.messageSource = messageSource;
-        this.locale = locale;
+        this.localeProvider = localeProvider;
     }
 
     public String getMessage(String messageKey) {
-        return this.messageSource.getMessage(messageKey, null, null, this.locale);
+        return this.messageSource.getMessage(messageKey, null, null, this.localeProvider.getLocale());
     }
 
 }

@@ -4,12 +4,12 @@ import org.springframework.stereotype.Service;
 import ru.otus.spring.exam.domain.Question;
 
 @Service
-public class QuestionPresenterConsole implements QuestionPresenter {
+public class QuestionPresenterImpl implements QuestionPresenter {
 
     private final QuestionConverter questionConverter;
     private final IOService ioService;
 
-    public QuestionPresenterConsole(QuestionConverter questionConverter, IOService ioService){
+    public QuestionPresenterImpl(QuestionConverter questionConverter, IOService ioService){
         this.questionConverter = questionConverter;
         this.ioService = ioService;
     }

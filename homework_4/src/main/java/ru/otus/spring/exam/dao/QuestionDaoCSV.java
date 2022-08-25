@@ -56,7 +56,7 @@ public class QuestionDaoCSV implements QuestionDao {
                         answers.add(new Answer(lines[i + 2].trim(), (i == correctAnswerIndex)));
                     }
                     String questionText = lines[0].trim();
-                    res.add(new Question(questionText, answers, correctAnswerIndex));
+                    res.add(new Question(questionText, answers));
                 } else {
                     break;
                 }

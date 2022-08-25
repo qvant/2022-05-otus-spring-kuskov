@@ -11,6 +11,6 @@ public class L18nConfig {
 
     @Bean
     public L18nService l18nService(MessageSource messageSource, LocaleProvider localeProvider) {
-        return new L18nService(messageSource, localeProvider.getLocale());
+        return new L18nService(messageSource, localeProvider);
     }
 }
