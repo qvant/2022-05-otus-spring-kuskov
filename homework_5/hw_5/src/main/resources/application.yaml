@@ -14,5 +14,9 @@ spring:
   h2:
     console:
       path: /h2-console
+      enabled: true
       settings:
         web-allow-others: true
+logging:
+  level:
+    root: ERROR

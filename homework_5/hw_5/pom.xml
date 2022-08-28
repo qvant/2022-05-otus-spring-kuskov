@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>ru.otus.spring</groupId>
-	<artifactId>exam</artifactId>
+	<artifactId>Library</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>exam</name>
+	<name>Library</name>
 	<description>5th homework</description>
 	<properties>
 		<java.version>11</java.version>
