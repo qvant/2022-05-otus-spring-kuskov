@@ -38,7 +38,7 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public void update(Book book) {
-        jdbc.update("update books set title = :title, isbn = :isbn, genre_id = :genre_id, author_id = :author_id, where id = :id",
+        jdbc.update("update books set title = :title, isbn = :isbn, genre_id = :genre_id, author_id = :author_id where id = :id",
                 Map.of("id", book.getId(), "title", book.getTitle(), "isbn", book.getIsbn(), "genre_id",
                         book.getGenre().getId(), "author_id", book.getAuthor().getId()));
     }
@@ -54,7 +54,7 @@ public class BookDaoJdbc implements BookDao {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return jdbc.queryForObject("select b.id, b.title, b.isbn, b.genre_id, b.author_id, a.id as author_id," +
                 " a.name as author_name, g.id as genre_id, g.name as genre_name from books b left join authors a on a.id = b.author_id" +
-                " left join genres g on g.id = b.genre_id where id = :id ", params , new BookDaoJdbc.BookMapper());
+                " left join genres g on g.id = b.genre_id where b.id = :id ", params , new BookDaoJdbc.BookMapper());
     }
 
     @Override
