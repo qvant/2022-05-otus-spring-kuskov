@@ -9,7 +9,6 @@ import ru.otus.spring.library.domain.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class BookDaoJdbc implements BookDao {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return jdbc.queryForObject("select b.id, b.title, b.isbn, b.genre_id, b.author_id, a.id as author_id," +
                 " a.name as author_name, g.id as genre_id, g.name as genre_name from books b left join authors a on a.id = b.author_id" +
-                " left join genres g on g.id = b.genre_id where b.id = :id ", params , new BookDaoJdbc.BookMapper());
+                " left join genres g on g.id = b.genre_id where b.id = :id ", params, new BookDaoJdbc.BookMapper());
     }
 
     @Override
