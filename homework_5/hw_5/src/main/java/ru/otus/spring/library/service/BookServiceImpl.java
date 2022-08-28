@@ -17,7 +17,7 @@ public class BookServiceImpl implements BookService {
     private final GenreDao genreDao;
     private final IOService ioService;
 
-    public BookServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, IOService ioService){
+    public BookServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, IOService ioService) {
         this.bookDao = bookDao;
         this.authorDao = authorDao;
         this.genreDao = genreDao;
@@ -27,8 +27,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void showBooks() {
-        List<Book>  books = this.bookDao.getAll();
-        for (Book book: books
+        List<Book> books = this.bookDao.getAll();
+        for (Book book : books
         ) {
             ioService.printWithParameters("[%d] %s %s (Жанр: %s) %S", book.getId(), book.getTitle(), book.getAuthor().getName(), book.getGenre().getName(), book.getIsbn());
         }
@@ -36,16 +36,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void addBook(String title, Long author_id, Long genre_id, String isbn) {
-        if (author_id == null){
+        if (author_id == null) {
             ioService.print("Введите идентификатор автора");
             author_id = Long.parseLong(ioService.read());
         }
         Author author = authorDao.getById(author_id);
-        if (genre_id == null){
+        if (genre_id == null) {
             ioService.print("Введите идентификатор жанра");
             genre_id = Long.parseLong(ioService.read());
         }
-        if (isbn == null){
+        if (isbn == null) {
             ioService.print("Введите ISBN");
             isbn = ioService.read();
         }
@@ -67,8 +67,6 @@ public class BookServiceImpl implements BookService {
         Book book = this.bookDao.getById(id);
         this.bookDao.delete(book);
     }
-
-
 
 
 }

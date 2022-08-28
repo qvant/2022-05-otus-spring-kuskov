@@ -20,10 +20,12 @@ public class AuthorCommands {
     public void addAuthor(@ShellOption String name) {
         authorService.addAuthor(name);
     }
+
     @ShellMethod(value = "Update author", key = {"au", "update_author"})
     public void updateAuthor(@ShellOption long id, String name) {
         authorService.updateAuthor(id, name);
     }
+
     @ShellMethod(value = "Delete author", key = {"ad", "delete_author"})
     public void deleteAuthor(@ShellOption long id) {
         authorService.deleteAuthor(id);

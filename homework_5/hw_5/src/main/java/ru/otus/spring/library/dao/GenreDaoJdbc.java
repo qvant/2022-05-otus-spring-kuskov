@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.otus.spring.library.domain.Author;
 import ru.otus.spring.library.domain.Genre;
 
 import java.sql.ResultSet;
@@ -19,7 +18,7 @@ import java.util.Map;
 public class GenreDaoJdbc implements GenreDao {
     private final NamedParameterJdbcOperations jdbc;
 
-    public GenreDaoJdbc(NamedParameterJdbcOperations jdbcOperations){
+    public GenreDaoJdbc(NamedParameterJdbcOperations jdbcOperations) {
         this.jdbc = jdbcOperations;
     }
 

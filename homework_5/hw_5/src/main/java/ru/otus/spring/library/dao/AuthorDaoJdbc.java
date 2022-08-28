@@ -3,7 +3,6 @@ package ru.otus.spring.library.dao;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,7 @@ import java.util.Map;
 public class AuthorDaoJdbc implements AuthorDao {
     private final NamedParameterJdbcOperations jdbc;
 
-    public AuthorDaoJdbc(NamedParameterJdbcOperations jdbcOperations){
+    public AuthorDaoJdbc(NamedParameterJdbcOperations jdbcOperations) {
         this.jdbc = jdbcOperations;
     }
 
@@ -53,7 +52,7 @@ public class AuthorDaoJdbc implements AuthorDao {
     @Override
     public Author getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return jdbc.queryForObject("select id, name from authors where id = :id ", params , new AuthorMapper());
+        return jdbc.queryForObject("select id, name from authors where id = :id ", params, new AuthorMapper());
     }
 
     @Override
@@ -61,7 +60,7 @@ public class AuthorDaoJdbc implements AuthorDao {
         return jdbc.getJdbcOperations().query("select id, name from authors", new AuthorMapper());
     }
 
-    private static class AuthorMapper implements RowMapper<Author>{
+    private static class AuthorMapper implements RowMapper<Author> {
         @Override
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {
             long id = resultSet.getLong("id");

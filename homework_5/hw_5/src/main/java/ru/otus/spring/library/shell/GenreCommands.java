@@ -21,10 +21,12 @@ public class GenreCommands {
     public void addGenre(@ShellOption String name) {
         genreService.addGenre(name);
     }
+
     @ShellMethod(value = "Update genre", key = {"gu", "update_genre"})
     public void updateGenre(@ShellOption long id, String name) {
         genreService.updateGenre(id, name);
     }
+
     @ShellMethod(value = "Delete genre", key = {"gd", "delete_genre"})
     public void deleteGenre(@ShellOption long id) {
         genreService.deleteGenre(id);

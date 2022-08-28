@@ -20,7 +20,9 @@ public class Book {
         this.author = author;
         this.genre = genre;
         this.isbn = isbn;
-    };
+    }
+
+    ;
 
     public String getTitle() {
         return title;

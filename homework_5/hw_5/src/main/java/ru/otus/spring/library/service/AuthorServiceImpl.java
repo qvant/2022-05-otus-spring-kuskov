@@ -19,7 +19,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void showAuthors() {
         List<Author> authors = this.authorDao.getAll();
-        for (Author author: authors
+        for (Author author : authors
         ) {
             ioService.printWithParameters("[%d] %s", author.getId(), author.getName());
         }

@@ -18,7 +18,7 @@ public class BookCommands {
     }
 
     @ShellMethod(value = "Add book", key = {"ba", "add_book"})
-    public void addBook(@ShellOption String title, @ShellOption(defaultValue = "") Long author_id, @ShellOption(defaultValue = "") Long genre_id, @ShellOption(defaultValue = "") String isbn){
+    public void addBook(@ShellOption String title, @ShellOption(defaultValue = "") Long author_id, @ShellOption(defaultValue = "") Long genre_id, @ShellOption(defaultValue = "") String isbn) {
         bookService.addBook(title, author_id, genre_id, isbn);
     }
 
