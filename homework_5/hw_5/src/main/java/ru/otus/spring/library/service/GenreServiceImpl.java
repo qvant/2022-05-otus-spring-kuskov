@@ -2,6 +2,7 @@ package ru.otus.spring.library.service;
 
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.dao.GenreDao;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import ru.otus.spring.library.domain.Genre;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void showGenres() {
         List<Genre> genres = this.genreDao.getAll();
-        for (Genre genre: genres
+        for (Genre genre : genres
         ) {
             ioService.printWithParameters("[%d] %s", genre.getId(), genre.getName());
         }
@@ -39,6 +40,11 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void deleteGenre(long id) {
         Genre genre = genreDao.getById(id);
-        genreDao.delete(genre);
+        try {
+            genreDao.delete(genre);
+        } catch (
+                HasDependentObjectsException exception) {
+            ioService.print(exception.getMessage());
+        }
     }
 }

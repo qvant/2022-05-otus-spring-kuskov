@@ -1,5 +1,6 @@
 package ru.otus.spring.library.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.library.domain.Genre;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,8 +46,12 @@ public class GenreDaoJdbc implements GenreDao {
     }
 
     @Override
-    public void delete(Genre genre) {
-        jdbc.update("delete from genres where id = :id", Map.of("id", genre.getId()));
+    public void delete(Genre genre) throws HasDependentObjectsException {
+        try {
+            jdbc.update("delete from genres where id = :id", Map.of("id", genre.getId()));
+        } catch (DataAccessException exception) {
+            throw new HasDependentObjectsException("Нельзя удалить жанр с id " + genre.getId() + ", есть зависимости");
+        }
     }
 
     @Override

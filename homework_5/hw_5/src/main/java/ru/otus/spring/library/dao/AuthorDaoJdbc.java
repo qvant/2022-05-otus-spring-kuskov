@@ -1,5 +1,6 @@
 package ru.otus.spring.library.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.library.domain.Author;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,14 +31,13 @@ public class AuthorDaoJdbc implements AuthorDao {
     }
 
     @Override
-    public Author insert(Author author) {
+    public void insert(Author author) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource parameterSource = new MapSqlParameterSource();
         parameterSource.addValue("id", author.getId());
         parameterSource.addValue("name", author.getName());
         jdbc.update("insert into authors (id, name) values (NEXT VALUE FOR S_AUTHORS, :name)", parameterSource, keyHolder);
         author.setId(keyHolder.getKey().longValue());
-        return author;
     }
 
     @Override
@@ -45,8 +46,14 @@ public class AuthorDaoJdbc implements AuthorDao {
     }
 
     @Override
-    public void delete(Author author) {
-        jdbc.update("delete from authors where id = :id", Map.of("id", author.getId()));
+    public void delete(Author author) throws HasDependentObjectsException {
+        try {
+            jdbc.update("delete from authors where id = :id", Map.of("id", author.getId()));
+        } catch (DataAccessException exception) {
+            throw new HasDependentObjectsException("Нельзя удалить автора с id " + author.getId() + ", есть зависимости");
+        }
+
+
     }
 
     @Override

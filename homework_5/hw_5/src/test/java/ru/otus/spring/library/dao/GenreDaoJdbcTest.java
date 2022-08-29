@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring.library.domain.Genre;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ class GenreDaoJdbcTest {
     private static final long EXPECTED_GENRES_COUNT = 5;
     private static final String EXISTED_GENRE_NAME = "Мемуары";
     private static final long EXISTED_GENRE_ID = 5;
+    private static final long EXISTED_GENRE_WITH_BOOKS_ID = 1;
     private static final String NEW_GENRE_NAME = "Лит РПГ";
     @Autowired
     private GenreDaoJdbc GenreDaoJdbc;
@@ -71,7 +73,7 @@ class GenreDaoJdbcTest {
     }
 
     @Test
-    void checkGenreDeleted() {
+    void checkGenreDeleted() throws HasDependentObjectsException {
         Genre genre = GenreDaoJdbc.getById(EXISTED_GENRE_ID);
         GenreDaoJdbc.delete(genre);
         long genreCount = GenreDaoJdbc.count();
@@ -83,6 +85,22 @@ class GenreDaoJdbcTest {
             //Исключение выдано не найденным объектом.
             ;
         }
+
+    }
+
+    @Test
+    void checkGenreWithBooksThrowExceptionOnDelete() {
+        Genre genre = GenreDaoJdbc.getById(EXISTED_GENRE_WITH_BOOKS_ID);
+        try {
+            GenreDaoJdbc.delete(genre);
+            throw new AssertionError("Genre with dependency deleted and no exception thrown");
+        } catch (HasDependentObjectsException e) {
+            ;
+        }
+        long genreCount = GenreDaoJdbc.count();
+        assertEquals(genreCount, EXPECTED_GENRES_COUNT);
+        Genre savedGenre = GenreDaoJdbc.getById(EXISTED_GENRE_WITH_BOOKS_ID);
+        assertThat(genre).usingRecursiveComparison().isEqualTo(savedGenre);
 
     }
 

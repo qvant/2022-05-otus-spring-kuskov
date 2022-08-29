@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring.library.domain.Author;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ class AuthorDaoJdbcTest {
     private static final long EXPECTED_AUTHORS_COUNT = 4;
     private static final String EXISTED_AUTHOR_NAME = "Лермонтов";
     private static final long EXISTED_AUTHOR_ID = 2;
+    private static final long EXISTED_AUTHOR_WITH_DEPENDENCY_ID = 1;
     private static final String NEW_AUTHOR_NAME = "Переслегин";
     @Autowired
     private AuthorDaoJdbc authorDaoJdbc;
@@ -70,7 +72,7 @@ class AuthorDaoJdbcTest {
     }
 
     @Test
-    void checkAuthorDeleted() {
+    void checkAuthorDeleted() throws HasDependentObjectsException {
         Author author = authorDaoJdbc.getById(EXISTED_AUTHOR_ID);
         authorDaoJdbc.delete(author);
         long authorCount = authorDaoJdbc.count();
@@ -82,6 +84,23 @@ class AuthorDaoJdbcTest {
             //Исключение выдано не найденным объектом.
             ;
         }
+
+    }
+
+    @Test
+    void checkAuthorWithBooksThrowExceptionOnDelete() {
+        Author author = authorDaoJdbc.getById(EXISTED_AUTHOR_WITH_DEPENDENCY_ID);
+        try {
+            authorDaoJdbc.delete(author);
+            throw new AssertionError("Author with dependency deleted and no exception thrown");
+        } catch (HasDependentObjectsException e) {
+            ;
+        }
+        long authorCount = authorDaoJdbc.count();
+        assertEquals(authorCount, EXPECTED_AUTHORS_COUNT);
+        Author savedAuthor = authorDaoJdbc.getById(EXISTED_AUTHOR_WITH_DEPENDENCY_ID);
+        assertThat(author).usingRecursiveComparison().isEqualTo(savedAuthor);
+
 
     }
 

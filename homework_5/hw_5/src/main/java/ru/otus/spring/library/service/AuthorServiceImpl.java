@@ -2,6 +2,7 @@ package ru.otus.spring.library.service;
 
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.dao.AuthorDao;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import ru.otus.spring.library.domain.Author;
 
 import java.util.List;
@@ -27,7 +28,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author addAuthor(String name) {
-        return authorDao.insert(new Author(name));
+        Author author = new Author(name);
+        authorDao.insert(author);
+        return author;
     }
 
     @Override
@@ -39,6 +42,11 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void deleteAuthor(long id) {
         Author author = authorDao.getById(id);
-        authorDao.delete(author);
+        try {
+            authorDao.delete(author);
+        } catch (HasDependentObjectsException exception){
+            ioService.print(exception.getMessage());
+        }
+
     }
 }
