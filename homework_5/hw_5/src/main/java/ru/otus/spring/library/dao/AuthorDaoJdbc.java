@@ -1,6 +1,6 @@
 package ru.otus.spring.library.dao;
 
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -49,7 +49,7 @@ public class AuthorDaoJdbc implements AuthorDao {
     public void delete(Author author) throws HasDependentObjectsException {
         try {
             jdbc.update("delete from authors where id = :id", Map.of("id", author.getId()));
-        } catch (DataAccessException exception) {
+        } catch (DataIntegrityViolationException exception) {
             throw new HasDependentObjectsException("Нельзя удалить автора с id " + author.getId() + ", есть зависимости");
         }
 
