@@ -2,8 +2,8 @@ package ru.otus.spring.library.service;
 
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.dao.AuthorDao;
-import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import ru.otus.spring.library.domain.Author;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.util.List;
 
@@ -34,17 +34,18 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void updateAuthor(long id, String name) {
+    public Author updateAuthor(long id, String name) {
         Author author = new Author(id, name);
         authorDao.update(author);
+        return author;
     }
 
     @Override
     public void deleteAuthor(long id) {
-        Author author = authorDao.getById(id);
+        Author author = new Author(id, "");
         try {
             authorDao.delete(author);
-        } catch (HasDependentObjectsException exception){
+        } catch (HasDependentObjectsException exception) {
             ioService.print(exception.getMessage());
         }
 

@@ -1,7 +1,10 @@
 package ru.otus.spring.library.dao;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.library.domain.Author;
 import ru.otus.spring.library.domain.Book;
@@ -30,9 +33,15 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public void insert(Book book) {
-        jdbc.update("insert into books (id, title, isbn, genre_id, author_id) values(:id, :title, :isbn, :genre_id, :author_id)",
-                Map.of("id", book.getId(), "title", book.getTitle(), "isbn", book.getIsbn(), "genre_id",
-                        book.getGenre().getId(), "author_id", book.getAuthor().getId()));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+        parameterSource.addValue("title", book.getTitle());
+        parameterSource.addValue("isbn", book.getIsbn());
+        parameterSource.addValue("genre_id", book.getGenre().getId());
+        parameterSource.addValue("author_id", book.getAuthor().getId());
+        jdbc.update("insert into books (id, title, isbn, genre_id, author_id) values(default, :title, :isbn, :genre_id, :author_id)",
+                parameterSource, keyHolder);
+        book.setId(keyHolder.getKey().longValue());
     }
 
     @Override
@@ -40,6 +49,7 @@ public class BookDaoJdbc implements BookDao {
         jdbc.update("update books set title = :title, isbn = :isbn, genre_id = :genre_id, author_id = :author_id where id = :id",
                 Map.of("id", book.getId(), "title", book.getTitle(), "isbn", book.getIsbn(), "genre_id",
                         book.getGenre().getId(), "author_id", book.getAuthor().getId()));
+
     }
 
     @Override

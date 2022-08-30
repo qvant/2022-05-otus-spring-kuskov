@@ -1,5 +1,6 @@
 package ru.otus.spring.library.service;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.dao.AuthorDao;
 import ru.otus.spring.library.dao.BookDao;
@@ -28,36 +29,47 @@ public class BookServiceImpl implements BookService {
     @Override
     public void showBooks() {
         List<Book> books = this.bookDao.getAll();
-        for (Book book : books
-        ) {
+        for (Book book : books) {
             ioService.printWithParameters("[%d] %s %s (Жанр: %s) %S", book.getId(), book.getTitle(), book.getAuthor().getName(), book.getGenre().getName(), book.getIsbn());
         }
     }
 
     @Override
     public void addBook(String title, Long author_id, Long genre_id, String isbn) {
-        if (author_id == null) {
-            ioService.print("Введите идентификатор автора");
-            author_id = Long.parseLong(ioService.read());
+        Author author = null;
+        Genre genre = null;
+        try {
+            author = authorDao.getById(author_id);
+        } catch (EmptyResultDataAccessException exception) {
+            ioService.print("Автор с id " + author_id + " не существует");
+            return;
         }
-        Author author = authorDao.getById(author_id);
-        if (genre_id == null) {
-            ioService.print("Введите идентификатор жанра");
-            genre_id = Long.parseLong(ioService.read());
+        try {
+            genre = genreDao.getById(author_id);
+        } catch (EmptyResultDataAccessException exception) {
+            ioService.print("Жанр с id " + author_id + " не существует");
+            return;
         }
-        if (isbn == null) {
-            ioService.print("Введите ISBN");
-            isbn = ioService.read();
-        }
-        Genre genre = genreDao.getById(genre_id);
         Book book = new Book(title, author, genre, isbn);
         bookDao.insert(book);
     }
 
     @Override
     public void updateBook(long id, String title, long author_id, long genre_id, String isbn) {
-        Author author = authorDao.getById(author_id);
-        Genre genre = genreDao.getById(author_id);
+        Author author = null;
+        Genre genre = null;
+        try {
+            author = authorDao.getById(author_id);
+        } catch (EmptyResultDataAccessException exception) {
+            ioService.print("Автор с id " + author_id + "не существует");
+            return;
+        }
+        try {
+            genre = genreDao.getById(author_id);
+        } catch (EmptyResultDataAccessException exception) {
+            ioService.print("Жанр с id " + author_id + "не существует");
+            return;
+        }
         Book book = new Book(id, title, author, genre, isbn);
         bookDao.update(book);
     }

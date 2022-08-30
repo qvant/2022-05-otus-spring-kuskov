@@ -1,6 +1,5 @@
 package ru.otus.spring.library.dao;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +8,12 @@ import org.springframework.context.annotation.Import;
 import ru.otus.spring.library.domain.Author;
 import ru.otus.spring.library.domain.Book;
 import ru.otus.spring.library.domain.Genre;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @DisplayName("Dao for books")
@@ -36,10 +35,6 @@ class BookDaoJdbcTest {
     private static final String NEW_BOOK_GENRE_NAME = "Фантастика";
     @Autowired
     private BookDaoJdbc bookDaoJdbc;
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     void checkBooksCountIsCorrect() {
@@ -71,6 +66,16 @@ class BookDaoJdbcTest {
     }
 
     @Test
+    void checkMassBookCreated() {
+        Genre genre = new Genre(NEW_BOOK_GENRE_ID, NEW_BOOK_GENRE_NAME);
+        Author author = new Author(NEW_BOOK_AUTHOR_ID, NEW_BOOK_AUTHOR_NAME);
+        for (int i = 0; i < 1000; i++) {
+            Book book = new Book(NEW_BOOK_TITLE, author, genre, NEW_BOOK_ISBN);
+            bookDaoJdbc.insert(book);
+        }
+    }
+
+    @Test
     void checkBookFindedById() {
         Book book = bookDaoJdbc.getById(EXISTED_BOOK_ID);
         assertEquals(book.getId(), EXISTED_BOOK_ID);
@@ -81,7 +86,7 @@ class BookDaoJdbcTest {
     }
 
     @Test
-    void checkBookUpdated() {
+    void checkBookUpdated() throws HasDependentObjectsException {
         Book book = bookDaoJdbc.getById(EXISTED_BOOK_ID);
         String newTitle = "20 000 лье под водой";
         String newIsbn = "555666";
@@ -99,13 +104,9 @@ class BookDaoJdbcTest {
         bookDaoJdbc.delete(book);
         long genreCount = bookDaoJdbc.count();
         assertEquals(genreCount, EXPECTED_BOOKS_COUNT - 1);
-        try {
-            Book savedBook = bookDaoJdbc.getById(EXISTED_BOOK_ID);
-            throw new AssertionError("Genre wasn't deleted properly");
-        } catch (org.springframework.dao.EmptyResultDataAccessException exception) {
-            //Исключение выдано не найденным объектом.
-            ;
-        }
+        assertThrows(org.springframework.dao.EmptyResultDataAccessException.class, () -> {
+            bookDaoJdbc.getById(EXISTED_BOOK_ID);
+        }, "Genre wasn't deleted properly");
 
     }
 

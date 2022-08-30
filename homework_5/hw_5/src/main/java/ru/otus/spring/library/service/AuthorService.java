@@ -7,7 +7,7 @@ public interface AuthorService {
 
     Author addAuthor(String name);
 
-    void updateAuthor(long id, String name);
+    Author updateAuthor(long id, String name);
 
     void deleteAuthor(long id);
 }

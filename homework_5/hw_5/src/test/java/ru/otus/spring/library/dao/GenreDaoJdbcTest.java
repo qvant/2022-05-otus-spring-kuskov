@@ -1,6 +1,5 @@
 package ru.otus.spring.library.dao;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,7 @@ import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @DisplayName("Dao for genres")
@@ -28,10 +26,6 @@ class GenreDaoJdbcTest {
     private static final String NEW_GENRE_NAME = "Лит РПГ";
     @Autowired
     private GenreDaoJdbc GenreDaoJdbc;
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     void checkGenresCountIsCorrect() {
@@ -78,29 +72,22 @@ class GenreDaoJdbcTest {
         GenreDaoJdbc.delete(genre);
         long genreCount = GenreDaoJdbc.count();
         assertEquals(genreCount, EXPECTED_GENRES_COUNT - 1);
-        try {
-            Genre savedGenre = GenreDaoJdbc.getById(EXISTED_GENRE_ID);
-            throw new AssertionError("Genre wasn't deleted properly");
-        } catch (org.springframework.dao.EmptyResultDataAccessException exception) {
-            //Исключение выдано не найденным объектом.
-            ;
-        }
+        assertThrows(org.springframework.dao.EmptyResultDataAccessException.class, () -> {
+            GenreDaoJdbc.getById(EXISTED_GENRE_ID);
+        }, "Genre wasn't deleted properly");
 
     }
 
     @Test
     void checkGenreWithBooksThrowExceptionOnDelete() {
         Genre genre = GenreDaoJdbc.getById(EXISTED_GENRE_WITH_BOOKS_ID);
-        try {
+        assertThrows(HasDependentObjectsException.class, () -> {
             GenreDaoJdbc.delete(genre);
-            throw new AssertionError("Genre with dependency deleted and no exception thrown");
-        } catch (HasDependentObjectsException e) {
-            ;
-        }
+        }, "Genre with dependency deleted and no exception thrown");
         long genreCount = GenreDaoJdbc.count();
         assertEquals(genreCount, EXPECTED_GENRES_COUNT);
-        Genre savedGenre = GenreDaoJdbc.getById(EXISTED_GENRE_WITH_BOOKS_ID);
-        assertThat(genre).usingRecursiveComparison().isEqualTo(savedGenre);
+        Genre newGenreState = GenreDaoJdbc.getById(EXISTED_GENRE_WITH_BOOKS_ID);
+        assertThat(genre).usingRecursiveComparison().isEqualTo(newGenreState);
 
     }
 

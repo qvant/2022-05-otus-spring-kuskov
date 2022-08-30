@@ -5,11 +5,13 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.spring.library.service.BookService;
+import ru.otus.spring.library.service.IOService;
 
 @ShellComponent
 @RequiredArgsConstructor
 public class BookCommands {
     private final BookService bookService;
+    private final IOService ioService;
 
 
     @ShellMethod(value = "Show books", key = {"b", "books"})
@@ -19,6 +21,18 @@ public class BookCommands {
 
     @ShellMethod(value = "Add book", key = {"ba", "add_book"})
     public void addBook(@ShellOption String title, @ShellOption(defaultValue = "") Long author_id, @ShellOption(defaultValue = "") Long genre_id, @ShellOption(defaultValue = "") String isbn) {
+        if (author_id == null) {
+            ioService.print("Введите идентификатор автора");
+            author_id = Long.parseLong(ioService.read());
+        }
+        if (genre_id == null) {
+            ioService.print("Введите идентификатор жанра");
+            genre_id = Long.parseLong(ioService.read());
+        }
+        if (isbn == null) {
+            ioService.print("Введите ISBN");
+            isbn = ioService.read();
+        }
         bookService.addBook(title, author_id, genre_id, isbn);
     }
 

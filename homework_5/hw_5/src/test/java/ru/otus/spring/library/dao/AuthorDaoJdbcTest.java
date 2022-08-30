@@ -1,6 +1,5 @@
 package ru.otus.spring.library.dao;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,7 @@ import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Dao for authors")
 @JdbcTest
@@ -27,10 +25,6 @@ class AuthorDaoJdbcTest {
     private static final String NEW_AUTHOR_NAME = "Переслегин";
     @Autowired
     private AuthorDaoJdbc authorDaoJdbc;
-
-    @BeforeEach
-    void setUp() {
-    }
 
     @Test
     void checkAuthorsCountIsCorrect() {
@@ -77,29 +71,18 @@ class AuthorDaoJdbcTest {
         authorDaoJdbc.delete(author);
         long authorCount = authorDaoJdbc.count();
         assertEquals(authorCount, EXPECTED_AUTHORS_COUNT - 1);
-        try {
-            Author savedAuthor = authorDaoJdbc.getById(EXISTED_AUTHOR_ID);
-            throw new AssertionError("Author wasn't deleted properly");
-        } catch (org.springframework.dao.EmptyResultDataAccessException exception) {
-            //Исключение выдано не найденным объектом.
-            ;
-        }
+        assertThrows(org.springframework.dao.EmptyResultDataAccessException.class, ()->{authorDaoJdbc.getById(EXISTED_AUTHOR_ID);}, "Author wasn't deleted properly");
 
     }
 
     @Test
     void checkAuthorWithBooksThrowExceptionOnDelete() {
         Author author = authorDaoJdbc.getById(EXISTED_AUTHOR_WITH_DEPENDENCY_ID);
-        try {
-            authorDaoJdbc.delete(author);
-            throw new AssertionError("Author with dependency deleted and no exception thrown");
-        } catch (HasDependentObjectsException e) {
-            ;
-        }
+        assertThrows(HasDependentObjectsException.class, () ->{authorDaoJdbc.delete(author);}, "Author with dependency deleted and no exception thrown");
         long authorCount = authorDaoJdbc.count();
         assertEquals(authorCount, EXPECTED_AUTHORS_COUNT);
-        Author savedAuthor = authorDaoJdbc.getById(EXISTED_AUTHOR_WITH_DEPENDENCY_ID);
-        assertThat(author).usingRecursiveComparison().isEqualTo(savedAuthor);
+        Author newAuthorState = authorDaoJdbc.getById(EXISTED_AUTHOR_WITH_DEPENDENCY_ID);
+        assertThat(author).usingRecursiveComparison().isEqualTo(newAuthorState);
 
 
     }

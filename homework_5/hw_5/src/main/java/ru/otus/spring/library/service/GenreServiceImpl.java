@@ -2,8 +2,8 @@ package ru.otus.spring.library.service;
 
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.dao.GenreDao;
-import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import ru.otus.spring.library.domain.Genre;
+import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public void deleteGenre(long id) {
-        Genre genre = genreDao.getById(id);
+        Genre genre = new Genre(id, "");
         try {
             genreDao.delete(genre);
         } catch (
