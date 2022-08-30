@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Import;
 import ru.otus.spring.library.domain.Author;
 import ru.otus.spring.library.domain.Book;
 import ru.otus.spring.library.domain.Genre;
-import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import java.util.List;
 
@@ -86,7 +85,7 @@ class BookDaoJdbcTest {
     }
 
     @Test
-    void checkBookUpdated() throws HasDependentObjectsException {
+    void checkBookUpdated() {
         Book book = bookDaoJdbc.getById(EXISTED_BOOK_ID);
         String newTitle = "20 000 лье под водой";
         String newIsbn = "555666";
