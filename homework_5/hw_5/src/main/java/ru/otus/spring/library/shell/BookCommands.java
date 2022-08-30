@@ -29,7 +29,7 @@ public class BookCommands {
             ioService.print("Введите идентификатор жанра");
             genre_id = Long.parseLong(ioService.read());
         }
-        if (isbn == null) {
+        if (isbn.length() == 0) {
             ioService.print("Введите ISBN");
             isbn = ioService.read();
         }
