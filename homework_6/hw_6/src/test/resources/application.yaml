@@ -1,0 +1,10 @@
+spring:
+  shell:
+    interactive:
+      enabled: false
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+  main:
+    allow-circular-references: true
