@@ -98,14 +98,14 @@ class BookDaoJdbcTest {
     }
 
     @Test
-    void checkGenreDeleted() {
+    void checkBookDeleted() {
         Book book = bookDaoJdbc.getById(EXISTED_BOOK_ID);
         bookDaoJdbc.delete(book);
         long genreCount = bookDaoJdbc.count();
         assertEquals(genreCount, EXPECTED_BOOKS_COUNT - 1);
         assertThrows(org.springframework.dao.EmptyResultDataAccessException.class, () -> {
             bookDaoJdbc.getById(EXISTED_BOOK_ID);
-        }, "Genre wasn't deleted properly");
+        }, "Book wasn't deleted properly");
 
     }
 
