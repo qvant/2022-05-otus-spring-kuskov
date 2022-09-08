@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public class GenreRepositoryJpa implements GenreRepository {
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     public GenreRepositoryJpa(EntityManager em) {
         this.em = em;

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public class AuthorRepositoryJpa implements AuthorRepository {
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     public AuthorRepositoryJpa(EntityManager em) {
         this.em = em;

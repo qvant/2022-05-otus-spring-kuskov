@@ -15,4 +15,7 @@ insert into books(id, title, isbn, genre_id, author_id) values (3, 'Понеде
 insert into books(id, title, isbn, genre_id, author_id) values (4, 'Хищные вещи века', '978-5-17-094720-1', 3, 4);
 insert into books(id, title, isbn, genre_id, author_id) values (5, 'Властелин колец', '978-5-17-089322-5', 4, 3);
 
+insert into comments(id, book_id, text) values (1, 1, 'Классика из школьной программы');
+insert into comments(id, book_id, text) values (2, 5, 'По ней еще фильм сняли');
+
 commit;

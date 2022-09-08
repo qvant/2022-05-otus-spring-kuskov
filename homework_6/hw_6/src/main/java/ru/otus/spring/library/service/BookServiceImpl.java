@@ -34,15 +34,15 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void addBook(String title, Long author_id, Long genre_id, String isbn) {
-        var author = authorRepository.findById(author_id);
+    public void addBook(String title, Long authorId, Long genreId, String isbn) {
+        var author = authorRepository.findById(authorId);
         if (author.isEmpty()) {
-            ioService.print("Автор с id " + author_id + " не существует");
+            ioService.print("Автор с id " + authorId + " не существует");
             return;
         }
-        var genre = genreRepository.findById(author_id);
+        var genre = genreRepository.findById(authorId);
         if (genre.isEmpty()) {
-            ioService.print("Жанр с id " + author_id + " не существует");
+            ioService.print("Жанр с id " + authorId + " не существует");
             return;
         }
         Book book = new Book(title, author.get(), genre.get(), isbn);
@@ -51,15 +51,15 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void updateBook(long id, String title, long author_id, long genre_id, String isbn) {
-        var author = authorRepository.findById(author_id);
+    public void updateBook(long id, String title, long authorId, long genreId, String isbn) {
+        var author = authorRepository.findById(authorId);
         if (author.isEmpty()) {
-            ioService.print("Автор с id " + author_id + " не существует");
+            ioService.print("Автор с id " + authorId + " не существует");
             return;
         }
-        var genre = genreRepository.findById(author_id);
+        var genre = genreRepository.findById(authorId);
         if (genre.isEmpty()) {
-            ioService.print("Жанр с id " + author_id + " не существует");
+            ioService.print("Жанр с id " + authorId + " не существует");
             return;
         }
         Book book = new Book(id, title, author.get(), genre.get(), isbn);

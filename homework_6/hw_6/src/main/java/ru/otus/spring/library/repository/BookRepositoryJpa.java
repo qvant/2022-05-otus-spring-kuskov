@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public class BookRepositoryJpa implements BookRepository {
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     public BookRepositoryJpa(EntityManager em) {
         this.em = em;

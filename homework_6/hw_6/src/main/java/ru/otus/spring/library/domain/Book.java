@@ -18,6 +18,7 @@ public class Book {
     private Genre genre;
     private String isbn;
 
+    
     public Book() {
 
     }
@@ -36,8 +37,6 @@ public class Book {
         this.genre = genre;
         this.isbn = isbn;
     }
-
-    ;
 
     public String getTitle() {
         return title;

@@ -16,19 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class AuthorServiceImplTest {
 
-    @Autowired
-    private AuthorService authorService;
-
-    @MockBean
-    private AuthorRepositoryJpa authorRepositoryJpa;
-
-    @Captor
-    private ArgumentCaptor<Long> authorIdArgumentCaptor;
-
     private static final String NEW_AUTHOR_NAME = "Иванов";
     private static final long EXISTED_AUTHOR_ID = 2;
     private static final String EXISTED_AUTHOR_NAME = "Лермонтов";
-
+    @Autowired
+    private AuthorService authorService;
+    @MockBean
+    private AuthorRepositoryJpa authorRepositoryJpa;
+    @Captor
+    private ArgumentCaptor<Long> authorIdArgumentCaptor;
 
     @Test
     void testAddAuthor() {
