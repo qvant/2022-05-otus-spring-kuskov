@@ -7,6 +7,8 @@ import org.springframework.shell.standard.ShellOption;
 import ru.otus.spring.library.service.BookService;
 import ru.otus.spring.library.service.IOService;
 
+import javax.transaction.Transactional;
+
 @ShellComponent
 @RequiredArgsConstructor
 public class BookCommands {
@@ -41,6 +43,7 @@ public class BookCommands {
         bookService.updateBook(id, title, author_id, genre_id, isbn);
     }
 
+    @Transactional
     @ShellMethod(value = "Delete book", key = {"bd", "delete_book"})
     public void deleteAuthor(@ShellOption long id) {
         bookService.deleteBook(id);

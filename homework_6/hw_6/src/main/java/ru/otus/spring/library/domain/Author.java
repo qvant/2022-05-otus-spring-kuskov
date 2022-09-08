@@ -1,9 +1,18 @@
 package ru.otus.spring.library.domain;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "authors")
 public class Author {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
 
+    public Author(){
+
+    }
     public Author(long id, String name) {
         this.id = id;
         this.name = name;

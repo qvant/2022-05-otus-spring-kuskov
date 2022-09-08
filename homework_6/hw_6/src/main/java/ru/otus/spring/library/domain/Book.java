@@ -1,11 +1,26 @@
 package ru.otus.spring.library.domain;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "books")
+@NamedEntityGraph(name = "library-book-author-genre-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private final String title;
-    private final Author author;
-    private final Genre genre;
-    private final String isbn;
+    private String title;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
+    private String isbn;
+
+    public Book() {
+
+    }
 
     public Book(long id, String title, Author author, Genre genre, String isbn) {
         this.id = id;

@@ -14,7 +14,7 @@ public class IOServiceConsole implements IOService {
     private final InputStream in;
     private final BufferedReader bufferedReader;
 
-    public IOServiceConsole(){
+    public IOServiceConsole() {
         this.out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         this.in = System.in;
         this.bufferedReader = new BufferedReader(new InputStreamReader(this.in));
@@ -26,7 +26,7 @@ public class IOServiceConsole implements IOService {
     }
 
     @Override
-    public void printWithParameters(String text, Object ...args) {
+    public void printWithParameters(String text, Object... args) {
         out.printf(text, args);
         out.println();
     }
