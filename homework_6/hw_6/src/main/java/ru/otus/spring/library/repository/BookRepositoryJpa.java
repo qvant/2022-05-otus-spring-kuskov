@@ -1,5 +1,6 @@
 package ru.otus.spring.library.repository;
 
+import org.hibernate.graph.GraphSemantic;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.library.domain.Book;
 
@@ -7,10 +8,9 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hibernate.annotations.QueryHints.FETCHGRAPH;
-
 @Repository
 public class BookRepositoryJpa implements BookRepository {
+
     @PersistenceContext
     private final EntityManager em;
 
@@ -22,7 +22,7 @@ public class BookRepositoryJpa implements BookRepository {
     public List<Book> findAll() {
         EntityGraph<?> entityGraph = em.getEntityGraph("library-book-author-genre-graph");
         TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
-        query.setHint(FETCHGRAPH, entityGraph);
+        query.setHint(GraphSemantic.FETCH.getJpaHintName(), entityGraph);
         return query.getResultList();
     }
 
