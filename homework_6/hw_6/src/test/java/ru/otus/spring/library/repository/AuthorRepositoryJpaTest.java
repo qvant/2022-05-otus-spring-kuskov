@@ -52,7 +52,7 @@ class AuthorRepositoryJpaTest {
     }
 
     @Test
-    void checkAuthorFindedById() {
+    void checkAuthorFoundById() {
         Author author = authorRepositoryJpa.findById(EXISTED_AUTHOR_ID).get();
         assertEquals(author.getId(), EXISTED_AUTHOR_ID);
         assertEquals(author.getName(), EXISTED_AUTHOR_NAME);

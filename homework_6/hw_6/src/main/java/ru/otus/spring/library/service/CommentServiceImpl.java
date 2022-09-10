@@ -21,15 +21,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void showComments() {
-        List<Comment> comments = commentRepository.findAll();
-        for (Comment comment : comments
-        ) {
-            ioService.printWithParameters("[%d] %s (Книга: [%d] %s)", comment.getId(), comment.getText(), comment.getBook().getId(), comment.getBook().getTitle());
-        }
-    }
-
-    @Override
     public void showBookComments(Long bookId) {
         List<Comment> comments = commentRepository.findByBookId(bookId);
         for (Comment comment : comments

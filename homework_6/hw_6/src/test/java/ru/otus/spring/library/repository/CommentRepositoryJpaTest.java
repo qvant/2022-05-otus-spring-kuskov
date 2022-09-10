@@ -19,23 +19,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @Import(CommentRepositoryJpa.class)
 public class CommentRepositoryJpaTest {
 
-    private static final long EXPECTED_COMMENTS_COUNT = 2;
-
     private static final long EXISTED_BOOK_ID = 1;
     private static final long EXISTED_COMMENT_ID = 1;
+    private static final long EXPECTED_COMMENTS_COUNT = 1;
+    private static final long EXISTED_COMMENT_BOOK_ID = 1;
     private static final String EXISTED_COMMENT_TEXT = "Классика из школьной программы";
     private static final String NEW_COMMENT_TEXT = "Гы, лол";
 
     @Autowired
-    CommentRepositoryJpa commentRepositoryJpa;
+    private CommentRepositoryJpa commentRepositoryJpa;
     @Autowired
-    TestEntityManager testEntityManager;
-
-    @Test
-    void checkGCommentsCountIsCorrect() {
-        long realGenresCount = commentRepositoryJpa.findAll().size();
-        assertEquals(realGenresCount, EXPECTED_COMMENTS_COUNT);
-    }
+    private TestEntityManager testEntityManager;
 
     @Test
     void checkCommentCreated() {
@@ -47,7 +41,7 @@ public class CommentRepositoryJpaTest {
     }
 
     @Test
-    void checkCommentFindedById() {
+    void checkCommentFoundById() {
         Comment comment = commentRepositoryJpa.findById(EXISTED_COMMENT_ID).get();
         assertEquals(comment.getId(), EXISTED_COMMENT_ID);
         assertEquals(comment.getText(), EXISTED_COMMENT_TEXT);
@@ -66,14 +60,14 @@ public class CommentRepositoryJpaTest {
     @Test
     void checkCommentDeleted() {
         commentRepositoryJpa.deleteById(EXISTED_COMMENT_ID);
-        long commentsCount = commentRepositoryJpa.findAll().size();
+        long commentsCount = commentRepositoryJpa.findByBookId(EXISTED_COMMENT_BOOK_ID).size();
         assertEquals(commentsCount, EXPECTED_COMMENTS_COUNT - 1);
         assertNull(testEntityManager.find(Comment.class, EXISTED_COMMENT_ID), "Comment wasn't deleted properly");
     }
 
     @Test
-    void checkGetAll() {
-        List<Comment> comments = commentRepositoryJpa.findAll();
+    void checkGetByBookId() {
+        List<Comment> comments = commentRepositoryJpa.findByBookId(EXISTED_COMMENT_BOOK_ID);
         Comment existedComment = testEntityManager.find(Comment.class, EXISTED_COMMENT_ID);
         assertEquals(comments.size(), EXPECTED_COMMENTS_COUNT);
         assertTrue(comments.stream().anyMatch(comment -> existedComment.getText().equals(comment.getText())));

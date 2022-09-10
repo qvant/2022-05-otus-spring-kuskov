@@ -12,11 +12,6 @@ public class CommentCommands {
 
     private final CommentService commentService;
 
-    @ShellMethod(value = "Show all comments", key = {"c", "comments"})
-    public void showAllComments() {
-        commentService.showComments();
-    }
-
     @ShellMethod(value = "Show comments to book", key = {"cb", "book_comments"})
     public void showBookComments(@ShellOption long id) {
         commentService.showBookComments(id);

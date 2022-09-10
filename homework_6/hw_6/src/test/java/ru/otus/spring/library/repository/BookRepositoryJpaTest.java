@@ -35,7 +35,7 @@ class BookRepositoryJpaTest {
     private static final long NEW_BOOK_GENRE_ID = 4;
     private static final String NEW_BOOK_GENRE_NAME = "Фантастика";
     @Autowired
-    TestEntityManager testEntityManager;
+    private TestEntityManager testEntityManager;
     @Autowired
     private BookRepositoryJpa bookRepositoryJpa;
 

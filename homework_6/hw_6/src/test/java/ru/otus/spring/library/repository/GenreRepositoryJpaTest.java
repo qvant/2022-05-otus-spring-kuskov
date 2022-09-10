@@ -53,7 +53,7 @@ class GenreRepositoryJpaTest {
     }
 
     @Test
-    void checkGenreFindedById() {
+    void checkGenreFoundById() {
         Genre genre = genreRepositoryJpa.findById(EXISTED_GENRE_ID).get();
         assertEquals(genre.getId(), EXISTED_GENRE_ID);
         assertEquals(genre.getName(), EXISTED_GENRE_NAME);

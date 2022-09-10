@@ -6,6 +6,7 @@ import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
@@ -44,8 +45,8 @@ public class AuthorRepositoryJpa implements AuthorRepository {
         query.setParameter("id", id);
         try {
             query.executeUpdate();
-        } catch (javax.persistence.PersistenceException exception) {
-            throw new HasDependentObjectsException("Нельзя удалить автора с id " + id + ", есть зависимости");
+        } catch (PersistenceException exception) {
+            throw new HasDependentObjectsException(exception.getMessage());
         }
     }
 }

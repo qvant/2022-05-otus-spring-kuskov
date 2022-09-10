@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hibernate.annotations.QueryHints.FETCHGRAPH;
+
 @Repository
 public class BookRepositoryJpa implements BookRepository {
     @PersistenceContext
@@ -20,7 +22,7 @@ public class BookRepositoryJpa implements BookRepository {
     public List<Book> findAll() {
         EntityGraph<?> entityGraph = em.getEntityGraph("library-book-author-genre-graph");
         TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
-        query.setHint("javax.persistance.fetchgraph", entityGraph);
+        query.setHint(FETCHGRAPH, entityGraph);
         return query.getResultList();
     }
 

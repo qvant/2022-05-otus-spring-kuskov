@@ -45,11 +45,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public void deleteAuthor(long id) {
-        Author author = new Author(id, "");
         try {
             authorRepository.deleteById(id);
         } catch (HasDependentObjectsException exception) {
-            ioService.print(exception.getMessage());
+            ioService.print("Нельзя удалить автора с id " + id + ", есть зависимости");
         }
 
     }

@@ -1,7 +1,6 @@
 package ru.otus.spring.library.service;
 
 public interface CommentService {
-    void showComments();
 
     void showBookComments(Long bookId);
 

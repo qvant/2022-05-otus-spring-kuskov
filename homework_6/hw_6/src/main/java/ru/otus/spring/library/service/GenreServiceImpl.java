@@ -44,11 +44,10 @@ public class GenreServiceImpl implements GenreService {
     @Transactional
     @Override
     public void deleteGenre(long id) {
-        Genre genre = new Genre(id, "");
         try {
             genreRepository.deleteById(id);
         } catch (HasDependentObjectsException exception) {
-            ioService.print(exception.getMessage());
+            ioService.print("Нельзя удалить жанр с id " + id + ", есть зависимости");
         }
     }
 }
