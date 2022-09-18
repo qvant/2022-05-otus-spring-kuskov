@@ -28,7 +28,7 @@ public class CommentCommands {
     }
 
     @ShellMethod(value = "Delete comment", key = {"cd", "delete_comment"})
-    public void updateComment(@ShellOption long id) {
+    public void deleteComment(@ShellOption long id) {
         commentService.deleteComment(id);
     }
 
