@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.transaction.UnexpectedRollbackException;
 import ru.otus.spring.library.service.BookService;
 import ru.otus.spring.library.service.IOService;
 
@@ -42,8 +43,11 @@ public class BookCommands {
     }
 
     @ShellMethod(value = "Delete book", key = {"bd", "delete_book"})
-    public void deleteAuthor(@ShellOption long id) {
-        bookService.deleteBook(id);
+    public void deleteBook(@ShellOption long id) {
+        try {
+            bookService.deleteBook(id);
+        } catch (UnexpectedRollbackException exception) {
+        }
     }
 
 }

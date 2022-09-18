@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.transaction.UnexpectedRollbackException;
 import ru.otus.spring.library.service.AuthorService;
 
 @ShellComponent
@@ -28,6 +29,9 @@ public class AuthorCommands {
 
     @ShellMethod(value = "Delete author", key = {"ad", "delete_author"})
     public void deleteAuthor(@ShellOption long id) {
-        authorService.deleteAuthor(id);
+        try {
+            authorService.deleteAuthor(id);
+        } catch (UnexpectedRollbackException exception) {
+        }
     }
 }

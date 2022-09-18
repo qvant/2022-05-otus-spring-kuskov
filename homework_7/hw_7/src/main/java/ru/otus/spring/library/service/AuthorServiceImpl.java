@@ -1,11 +1,11 @@
 package ru.otus.spring.library.service;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.library.domain.Author;
 import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import ru.otus.spring.library.repository.AuthorRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
@@ -46,7 +46,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     public void deleteAuthor(long id) {
         try {
-            authorRepository.deleteById(id);
+            authorRepository.deleteByIdWithDependencyException(id);
         } catch (HasDependentObjectsException exception) {
             ioService.print("Нельзя удалить автора с id " + id + ", есть зависимости");
         }

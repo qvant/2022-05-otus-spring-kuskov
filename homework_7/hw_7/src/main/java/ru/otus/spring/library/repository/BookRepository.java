@@ -1,17 +1,14 @@
 package ru.otus.spring.library.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.otus.spring.library.domain.Book;
 
 import java.util.List;
-import java.util.Optional;
 
 
-public interface BookRepository {
+public interface BookRepository extends JpaRepository<Book, Long> {
+    @EntityGraph(attributePaths = {"genre", "author"})
     List<Book> findAll();
 
-    Optional<Book> findById(Long id);
-
-    Book save(Book book);
-
-    void deleteById(Long id);
 }

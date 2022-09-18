@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.transaction.UnexpectedRollbackException;
 import ru.otus.spring.library.service.CommentService;
 
 @ShellComponent
@@ -28,8 +29,12 @@ public class CommentCommands {
     }
 
     @ShellMethod(value = "Delete comment", key = {"cd", "delete_comment"})
-    public void updateComment(@ShellOption long id) {
-        commentService.deleteComment(id);
+    public void deleteComment(@ShellOption long id) {
+
+        try {
+            commentService.deleteComment(id);
+        } catch (UnexpectedRollbackException exception) {
+        }
     }
 
 

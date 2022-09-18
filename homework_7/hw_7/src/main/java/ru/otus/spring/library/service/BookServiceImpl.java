@@ -1,5 +1,6 @@
 package ru.otus.spring.library.service;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.domain.Book;
 import ru.otus.spring.library.repository.AuthorRepository;
@@ -67,8 +68,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void deleteBook(long id) {
-        bookRepository.deleteById(id);
+
+        try {
+            bookRepository.deleteById(id);
+        } catch (
+                EmptyResultDataAccessException exception) {
+            ioService.print("Не существует книга с id " + id);
+        }
     }
 
 

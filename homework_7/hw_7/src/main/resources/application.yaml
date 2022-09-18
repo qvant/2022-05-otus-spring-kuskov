@@ -9,6 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    show-sql: false
   sql:
     init:
       mode: always

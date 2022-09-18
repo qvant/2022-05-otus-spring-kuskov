@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.spring.library.domain.Author;
 import ru.otus.spring.library.exceptions.HasDependentObjectsException;
-import ru.otus.spring.library.repository.AuthorRepositoryJpa;
+import ru.otus.spring.library.repository.AuthorRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,21 +22,21 @@ public class AuthorServiceImplTest {
     @Autowired
     private AuthorService authorService;
     @MockBean
-    private AuthorRepositoryJpa authorRepositoryJpa;
+    private AuthorRepository authorRepository;
     @Captor
     private ArgumentCaptor<Long> authorIdArgumentCaptor;
 
     @Test
     void testAddAuthor() {
         Author author = authorService.addAuthor(NEW_AUTHOR_NAME);
-        Mockito.verify(authorRepositoryJpa).save(author);
+        Mockito.verify(authorRepository).save(author);
         assertEquals(author.getName(), NEW_AUTHOR_NAME);
     }
 
     @Test
     void testUpdateAuthor() {
         Author savedAuthor = authorService.updateAuthor(EXISTED_AUTHOR_ID, EXISTED_AUTHOR_NAME);
-        Mockito.verify(authorRepositoryJpa).save(savedAuthor);
+        Mockito.verify(authorRepository).save(savedAuthor);
         assertEquals(EXISTED_AUTHOR_NAME, savedAuthor.getName());
         assertEquals(EXISTED_AUTHOR_ID, savedAuthor.getId());
     }
@@ -44,7 +44,7 @@ public class AuthorServiceImplTest {
     @Test
     void testDeleteAuthor() throws HasDependentObjectsException {
         authorService.deleteAuthor(EXISTED_AUTHOR_ID);
-        Mockito.verify(authorRepositoryJpa).deleteById(authorIdArgumentCaptor.capture());
+        Mockito.verify(authorRepository).deleteByIdWithDependencyException(authorIdArgumentCaptor.capture());
         Long argumentValue = authorIdArgumentCaptor.getValue();
         assertEquals(argumentValue, EXISTED_AUTHOR_ID);
     }

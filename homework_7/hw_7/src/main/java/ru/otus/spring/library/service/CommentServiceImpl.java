@@ -1,5 +1,6 @@
 package ru.otus.spring.library.service;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.domain.Comment;
 import ru.otus.spring.library.repository.BookRepository;
@@ -56,6 +57,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteComment(long id) {
-        commentRepository.deleteById(id);
+        try {
+            commentRepository.deleteById(id);
+        } catch (
+                EmptyResultDataAccessException exception) {
+            ioService.print("Не существует комментарий с id " + id);
+        }
     }
 }

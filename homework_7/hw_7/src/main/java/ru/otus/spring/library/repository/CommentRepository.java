@@ -1,17 +1,14 @@
 package ru.otus.spring.library.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
 import ru.otus.spring.library.domain.Comment;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface CommentRepository {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+    @EntityGraph(attributePaths = {"book"})
     List<Comment> findByBookId(Long id);
 
-    Optional<Comment> findById(Long id);
-
-    Comment save(Comment comment);
-
-    void deleteById(Long id);
 }
