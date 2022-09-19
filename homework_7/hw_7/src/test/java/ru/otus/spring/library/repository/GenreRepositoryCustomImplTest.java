@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("JPA repository for genres")
 @DataJpaTest
-class GenreRepositoryJpaTest {
+class GenreRepositoryCustomImplTest {
 
     private static final long EXPECTED_GENRES_COUNT = 5;
     private static final long EXISTED_GENRE_ID = 5;
