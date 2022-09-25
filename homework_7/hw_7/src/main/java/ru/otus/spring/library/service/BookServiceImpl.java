@@ -41,9 +41,9 @@ public class BookServiceImpl implements BookService {
             ioService.print("Автор с id " + authorId + " не существует");
             return;
         }
-        var genre = genreRepository.findById(authorId);
+        var genre = genreRepository.findById(genreId);
         if (genre.isEmpty()) {
-            ioService.print("Жанр с id " + authorId + " не существует");
+            ioService.print("Жанр с id " + genreId + " не существует");
             return;
         }
         Book book = new Book(title, author.get(), genre.get(), isbn);
