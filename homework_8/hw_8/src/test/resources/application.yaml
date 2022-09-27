@@ -2,12 +2,10 @@ spring:
   shell:
     interactive:
       enabled: false
-  sql:
-    init:
-      mode: always
-      data-locations: data.sql
   main:
     allow-circular-references: true
-  jpa:
-    hibernate:
-      ddl-auto: none
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.spring.library.mongock

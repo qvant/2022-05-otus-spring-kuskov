@@ -1,20 +1,22 @@
 package ru.otus.spring.library.domain;
 
-import javax.persistence.*;
+import lombok.Data;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "genres")
+@Document(collection = "genres")
+@Data
 public class Genre {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private ObjectId id;
     private String name;
 
     public Genre() {
 
     }
 
-    public Genre(long id, String name) {
+    public Genre(ObjectId id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -23,11 +25,11 @@ public class Genre {
         this.name = name;
     }
 
-    public long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

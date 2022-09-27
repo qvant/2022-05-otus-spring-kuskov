@@ -3,7 +3,6 @@ package ru.otus.spring.library.service;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.library.domain.Author;
-import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import ru.otus.spring.library.repository.AuthorRepository;
 
 import java.util.List;
@@ -12,22 +11,23 @@ import java.util.List;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final IOService ioService;
+    private final IdConverterService idConverterService;
 
-    public AuthorServiceImpl(IOService ioService, AuthorRepository authorRepository) {
+    public AuthorServiceImpl(IOService ioService, AuthorRepository authorRepository, IdConverterService idConverterService) {
         this.authorRepository = authorRepository;
         this.ioService = ioService;
+        this.idConverterService = idConverterService;
     }
 
     @Override
     public void showAuthors() {
         List<Author> authors = this.authorRepository.findAll();
         for (Author author : authors) {
-            ioService.printWithParameters("[%d] %s", author.getId(), author.getName());
+            ioService.printWithParameters("[%s] %s", author.getId(), author.getName());
         }
     }
 
     @Override
-    @Transactional
     public Author addAuthor(String name) {
         Author author = new Author(name);
         authorRepository.save(author);
@@ -35,21 +35,28 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional
-    public Author updateAuthor(long id, String name) {
-        Author author = new Author(id, name);
-        authorRepository.save(author);
-        return author;
+    public Author updateAuthor(String id, String name) {
+        var objectId = idConverterService.convertToObjectId(id);
+        if (objectId == null) {
+            return null;
+        }
+        var author = authorRepository.findById(objectId);
+        if (author.isEmpty()) {
+            ioService.print("Автор с id " + id + " не найден'");
+            return null;
+        }
+        author.get().setName(name);
+        authorRepository.save(author.get());
+        return author.get();
     }
 
     @Override
-    @Transactional
-    public void deleteAuthor(long id) {
-        try {
-            authorRepository.deleteByIdWithDependencyException(id);
-        } catch (HasDependentObjectsException exception) {
-            ioService.print("Нельзя удалить автора с id " + id + ", есть зависимости");
+    public void deleteAuthor(String id) {
+        var objectId = idConverterService.convertToObjectId(id);
+        if (objectId != null) {
+            authorRepository.deleteById(objectId);
         }
+
 
     }
 }

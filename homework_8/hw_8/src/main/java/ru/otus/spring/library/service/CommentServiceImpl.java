@@ -1,67 +1,91 @@
 package ru.otus.spring.library.service;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.domain.Comment;
 import ru.otus.spring.library.repository.BookRepository;
-import ru.otus.spring.library.repository.CommentRepository;
 
-import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class CommentServiceImpl implements CommentService {
     private final BookRepository bookRepository;
-    private final CommentRepository commentRepository;
     private final IOService ioService;
 
-    public CommentServiceImpl(BookRepository bookRepository, CommentRepository commentRepository, IOService ioService) {
+    public CommentServiceImpl(BookRepository bookRepository, IOService ioService) {
         this.bookRepository = bookRepository;
-        this.commentRepository = commentRepository;
+
         this.ioService = ioService;
     }
 
     @Override
-    public void showBookComments(Long bookId) {
-        List<Comment> comments = commentRepository.findByBookId(bookId);
+    public void showBookComments(ObjectId bookId) {
+        var book = bookRepository.findById(bookId);
+        if (book.isEmpty()) {
+            ioService.printWithParameters("Книга [%s] не найдена", bookId.toString());
+            return;
+        }
+        List<Comment> comments = book.get().getComments();
+        if (comments == null) {
+            ioService.printWithParameters("Нет комментариев для книги [%s] %s:", book.get().getId(), book.get().getTitle());
+            return;
+        }
+        ioService.printWithParameters("Комментарии для книги [%s] %s:", book.get().getId(), book.get().getTitle());
+        long index = 0;
         for (Comment comment : comments
         ) {
-            ioService.printWithParameters("[%d] %s (Книга: [%d] %s)", comment.getId(), comment.getText(), comment.getBook().getId(), comment.getBook().getTitle());
+            ioService.printWithParameters("[%s] %s", index++, comment.getText());
         }
     }
 
     @Override
-    @Transactional
-    public void addComment(Long bookId, String text) {
+    public void addComment(ObjectId bookId, String text) {
         var book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
             ioService.print("Книги с id " + bookId + " не существует");
             return;
         }
-        Comment comment = new Comment(book.get(), text);
-        commentRepository.save(comment);
+        List<Comment> comments = book.get().getComments();
+        if (comments == null) {
+            comments = new ArrayList<Comment>();
+        }
+        comments.add(new Comment(text));
+        book.get().setComments(comments);
+        bookRepository.save(book.get());
     }
 
     @Override
-    @Transactional
-    public void updateComment(long id, String text) {
-        var comment = commentRepository.findById(id);
-        if (comment.isEmpty()) {
-            ioService.print("Комментария с id " + id + " не существует");
+    public void updateComment(ObjectId bookId, int commentId, String text) {
+        var book = bookRepository.findById(bookId);
+        if (book.isEmpty()) {
+            ioService.print("Книги с id " + bookId + " не существует");
             return;
         }
-        comment.get().setText(text);
-        commentRepository.save(comment.get());
+        List<Comment> comments = book.get().getComments();
+        if (comments == null) {
+            return;
+        }
+        var comment = comments.get(commentId);
+        comment.setText(text);
+        comments.set(commentId, comment);
+        book.get().setComments(comments);
+        bookRepository.save(book.get());
     }
 
     @Override
-    @Transactional
-    public void deleteComment(long id) {
-        try {
-            commentRepository.deleteById(id);
-        } catch (
-                EmptyResultDataAccessException exception) {
-            ioService.print("Не существует комментарий с id " + id);
+    public void deleteComment(ObjectId bookId, int commentId) {
+        var book = bookRepository.findById(bookId);
+        if (book.isEmpty()) {
+            ioService.print("Книги с id " + bookId + " не существует");
+            return;
         }
+        List<Comment> comments = book.get().getComments();
+        if (comments == null) {
+            return;
+        }
+        comments.remove(commentId);
+        book.get().setComments(comments);
+        bookRepository.save(book.get());
     }
 }

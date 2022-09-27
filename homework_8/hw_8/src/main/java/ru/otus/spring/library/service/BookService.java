@@ -1,12 +1,14 @@
 package ru.otus.spring.library.service;
 
+import org.bson.types.ObjectId;
+
 public interface BookService {
     void showBooks();
 
-    void addBook(String title, Long authorId, Long genreId, String isbn);
+    void addBook(String title, ObjectId authorId, ObjectId genreId, String isbn);
 
-    void updateBook(long id, String title, long authorId, long genreId, String isbn);
+    void updateBook(ObjectId id, String title, ObjectId authorId, ObjectId genreId, String isbn);
 
-    void deleteBook(long id);
+    void deleteBook(ObjectId id);
 
 }

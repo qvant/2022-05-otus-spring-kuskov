@@ -1,17 +1,21 @@
 package ru.otus.spring.library.domain;
 
-import javax.persistence.*;
+import lombok.Data;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "comments")
+//@Document(collection = "comments")
+@Data
 public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+//    @Id
+//    private ObjectId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
+    //    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "book_id")
+    //@DBRef(lazy = true)
+    //private Book book;
 
     private String text;
 
@@ -20,14 +24,15 @@ public class Comment {
 
     }
 
-    public Comment(Book book, String text) {
-        this.book = book;
+    public Comment(//Book book,
+                   String text) {
+        //this.book = book;
         this.text = text;
     }
 
-    public long getId() {
-        return id;
-    }
+//    public ObjectId getId() {
+//        return id;
+//    }
 
     public String getText() {
         return text;
@@ -37,8 +42,8 @@ public class Comment {
         this.text = text;
     }
 
-    public Book getBook() {
-        return book;
-    }
+    //public Book getBook() {
+//        return book;
+//    }
 
 }

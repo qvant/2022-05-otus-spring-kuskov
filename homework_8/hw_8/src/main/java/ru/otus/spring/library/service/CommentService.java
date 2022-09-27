@@ -1,12 +1,14 @@
 package ru.otus.spring.library.service;
 
+import org.bson.types.ObjectId;
+
 public interface CommentService {
 
-    void showBookComments(Long bookId);
+    void showBookComments(ObjectId bookId);
 
-    void addComment(Long bookId, String text);
+    void addComment(ObjectId bookId, String text);
 
-    void updateComment(long id, String text);
+    void updateComment(ObjectId bookId, int commentId, String text);
 
-    void deleteComment(long id);
+    void deleteComment(ObjectId bookId, int commentId) ;
 }

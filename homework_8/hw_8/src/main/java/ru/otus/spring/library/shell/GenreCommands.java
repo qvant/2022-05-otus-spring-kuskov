@@ -1,6 +1,7 @@
 package ru.otus.spring.library.shell;
 
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -24,12 +25,12 @@ public class GenreCommands {
     }
 
     @ShellMethod(value = "Update genre", key = {"gu", "update_genre"})
-    public void updateGenre(@ShellOption long id, String name) {
+    public void updateGenre(@ShellOption String id, String name) {
         genreService.updateGenre(id, name);
     }
 
     @ShellMethod(value = "Delete genre", key = {"gd", "delete_genre"})
-    public void deleteGenre(@ShellOption long id) {
+    public void deleteGenre(@ShellOption String id) {
         try {
             genreService.deleteGenre(id);
         } catch (UnexpectedRollbackException exception) {

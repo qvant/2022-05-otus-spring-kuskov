@@ -1,14 +1,14 @@
 package ru.otus.spring.library.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring.library.domain.Book;
 
 import java.util.List;
 
 
-public interface BookRepository extends JpaRepository<Book, Long> {
-    @EntityGraph(attributePaths = {"genre", "author"})
+public interface BookRepository extends MongoRepository<Book, ObjectId> {
+    //@EntityGraph(attributePaths = {"genre", "author"})
     List<Book> findAll();
 
 }

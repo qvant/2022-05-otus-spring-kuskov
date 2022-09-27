@@ -1,29 +1,35 @@
 package ru.otus.spring.library.domain;
 
-import javax.persistence.*;
+import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "books")
-@NamedEntityGraph(name = "library-book-author-genre-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
+import java.util.List;
+
+@Document(collection = "books")
+@RequiredArgsConstructor
+//@NamedEntityGraph(name = "library-book-author-genre-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private ObjectId id;
     private String title;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "author_id")
+    @DBRef(lazy = false)
     private Author author;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "genre_id")
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "genre_id")
+
+    @DBRef(lazy = false)
     private Genre genre;
     private String isbn;
 
+    private List<Comment> comments;
 
-    public Book() {
 
-    }
-
-    public Book(long id, String title, Author author, Genre genre, String isbn) {
+    public Book(ObjectId id, String title, Author author, Genre genre, String isbn) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -54,11 +60,19 @@ public class Book {
         return isbn;
     }
 
-    public long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

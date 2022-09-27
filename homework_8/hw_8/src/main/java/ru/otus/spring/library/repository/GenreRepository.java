@@ -1,8 +1,9 @@
 package ru.otus.spring.library.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring.library.domain.Genre;
 
-public interface GenreRepository extends JpaRepository<Genre, Long>, GenreRepositoryCustom {
+public interface GenreRepository extends MongoRepository<Genre, ObjectId> {
 
 }

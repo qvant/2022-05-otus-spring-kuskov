@@ -1,6 +1,7 @@
 package ru.otus.spring.library.shell;
 
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -23,15 +24,13 @@ public class AuthorCommands {
     }
 
     @ShellMethod(value = "Update author", key = {"au", "update_author"})
-    public void updateAuthor(@ShellOption long id, String name) {
+    public void updateAuthor(@ShellOption String id, String name) {
         authorService.updateAuthor(id, name);
     }
 
     @ShellMethod(value = "Delete author", key = {"ad", "delete_author"})
-    public void deleteAuthor(@ShellOption long id) {
-        try {
-            authorService.deleteAuthor(id);
-        } catch (UnexpectedRollbackException exception) {
-        }
+    public void deleteAuthor(@ShellOption String id) {
+        authorService.deleteAuthor(id);
+
     }
 }
