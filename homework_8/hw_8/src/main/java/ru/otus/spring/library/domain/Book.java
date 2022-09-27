@@ -10,17 +10,12 @@ import java.util.List;
 
 @Document(collection = "books")
 @RequiredArgsConstructor
-//@NamedEntityGraph(name = "library-book-author-genre-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
 public class Book {
     @Id
     private ObjectId id;
     private String title;
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "author_id")
     @DBRef(lazy = false)
     private Author author;
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "genre_id")
 
     @DBRef(lazy = false)
     private Genre genre;

@@ -5,7 +5,6 @@ import org.bson.types.ObjectId;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.transaction.UnexpectedRollbackException;
 import ru.otus.spring.library.service.BookService;
 import ru.otus.spring.library.service.IOService;
 
@@ -30,7 +29,7 @@ public class BookCommands {
         }
         try {
             authorId = new ObjectId(author_id);
-        } catch (Exception exception){
+        } catch (Exception exception) {
             ioService.print("Неверный идентификатор автора");
             return;
         }
@@ -40,7 +39,7 @@ public class BookCommands {
         }
         try {
             genreId = new ObjectId(genre_id);
-        } catch (Exception exception){
+        } catch (Exception exception) {
             ioService.print("Неверный идентификатор жанра");
             return;
         }
@@ -63,7 +62,7 @@ public class BookCommands {
         try {
             bookService.deleteBook(new ObjectId(new String(id)));
             //bookService.deleteBook(new ObjectId(id));
-        }  catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException exception) {
         }
     }
 

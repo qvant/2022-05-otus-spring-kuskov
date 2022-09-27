@@ -1,7 +1,5 @@
 package ru.otus.spring.library.service;
 
-import org.bson.types.ObjectId;
-
 public interface GenreService {
     void showGenres();
 

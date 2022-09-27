@@ -37,11 +37,6 @@ public class DatabaseChangelog {
         var memories = new Document().append("name", "Мемуары");
         genresCollection.insertOne(memories);
 
-//        insert into books(id, title, isbn, genre_id, author_id) values (1, 'Руслан и Людмила', '978-5-9268-2735-1', 2, 1);
-//        insert into books(id, title, isbn, genre_id, author_id) values (2, 'Евгений Онегин', '9780460875950', 1, 1);
-//        insert into books(id, title, isbn, genre_id, author_id) values (3, 'Понедельник начинается в субботу', '978-5-17-090334-4', 3, 3);
-//        insert into books(id, title, isbn, genre_id, author_id) values (4, 'Хищные вещи века', '978-5-17-094720-1', 3, 4);
-//        insert into books(id, title, isbn, genre_id, author_id) values (5, 'Властелин колец', '978-5-17-089322-5', 4, 3);
         MongoCollection<Document> booksCollection = db.getCollection("books");
         var doc = new Document();
         doc.append("title", "Руслан и Людмила");

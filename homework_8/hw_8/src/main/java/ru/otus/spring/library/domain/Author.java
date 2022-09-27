@@ -20,7 +20,6 @@ public class Author {
     }
 
     public Author(String name) {
-        this.id = id;
         this.name = name;
     }
 

@@ -1,6 +1,5 @@
 package ru.otus.spring.library.service;
 
-import org.bson.types.ObjectId;
 import ru.otus.spring.library.domain.Author;
 
 public interface AuthorService {

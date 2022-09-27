@@ -35,8 +35,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void addBook(String title, ObjectId authorId, ObjectId genreId, String isbn) {
-        ioService.print("Автор с id " + authorId + " ");
-        ioService.print("Жанр с id " + genreId + " ");
         var author = authorRepository.findById(authorId);
         if (author.isEmpty()) {
             ioService.print("Автор с id " + authorId + " не существует");

@@ -37,11 +37,11 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void updateGenre(String id, String name) {
         ObjectId objectId = idConverterService.convertToObjectId(id);
-        if (objectId == null){
+        if (objectId == null) {
             return;
         }
         var genre = genreRepository.findById(objectId);
-        if (genre.isEmpty()){
+        if (genre.isEmpty()) {
             ioService.print("Жанр с id " + id + " не найден");
             return;
         }
@@ -53,7 +53,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public void deleteGenre(String id) {
         ObjectId objectId = idConverterService.convertToObjectId(id);
-        if (objectId == null){
+        if (objectId == null) {
             return;
         }
         genreRepository.deleteById(objectId);
