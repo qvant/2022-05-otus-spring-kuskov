@@ -49,7 +49,6 @@ public class GenreServiceImpl implements GenreService {
         genreRepository.save(genre.get());
     }
 
-    //@Transactional
     @Override
     public void deleteGenre(String id) {
         ObjectId objectId = idConverterService.convertToObjectId(id);

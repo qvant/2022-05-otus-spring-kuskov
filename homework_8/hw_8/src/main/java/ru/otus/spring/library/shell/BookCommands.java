@@ -7,12 +7,14 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.spring.library.service.BookService;
 import ru.otus.spring.library.service.IOService;
+import ru.otus.spring.library.service.IdConverterService;
 
 @ShellComponent
 @RequiredArgsConstructor
 public class BookCommands {
     private final BookService bookService;
     private final IOService ioService;
+    private final IdConverterService idConverterService;
 
 
     @ShellMethod(value = "Show books", key = {"b", "books"})
@@ -27,28 +29,22 @@ public class BookCommands {
             ioService.print("Введите идентификатор автора");
             author_id = ioService.read();
         }
-        try {
-            authorId = new ObjectId(author_id);
-        } catch (Exception exception) {
-            ioService.print("Неверный идентификатор автора");
+        authorId = idConverterService.convertToObjectId(author_id);
+        if (authorId == null) {
             return;
         }
         if (genre_id == null) {
             ioService.print("Введите идентификатор жанра");
             genre_id = ioService.read();
         }
-        try {
-            genreId = new ObjectId(genre_id);
-        } catch (Exception exception) {
-            ioService.print("Неверный идентификатор жанра");
+        genreId = idConverterService.convertToObjectId(genre_id);
+        if (genreId == null) {
             return;
         }
         if (isbn.length() == 0) {
             ioService.print("Введите ISBN");
             isbn = ioService.read();
         }
-        ioService.print("Неверный  автора" + authorId);
-        ioService.print("Неверный жанра " + genreId);
         bookService.addBook(title, authorId, genreId, isbn);
     }
 
@@ -59,11 +55,11 @@ public class BookCommands {
 
     @ShellMethod(value = "Delete book", key = {"bd", "delete_book"})
     public void deleteBook(@ShellOption String id) {
-        try {
-            bookService.deleteBook(new ObjectId(new String(id)));
-            //bookService.deleteBook(new ObjectId(id));
-        } catch (IllegalArgumentException exception) {
+        ObjectId bookId = idConverterService.convertToObjectId(id);
+        if (bookId == null) {
+            return;
         }
+        bookService.deleteBook(bookId);
     }
 
 }

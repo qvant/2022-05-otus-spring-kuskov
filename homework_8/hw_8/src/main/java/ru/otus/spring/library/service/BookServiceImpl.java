@@ -66,7 +66,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    //@Transactional
     public void deleteBook(ObjectId id) {
 
         try {

@@ -15,12 +15,12 @@ public class GenreCascadeSaveMongoEvent extends AbstractMongoEventListener<Genre
 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Genre> event) {
-        Object source = event.getSource();
+        Genre source = event.getSource();
         List<Book> bookList = mongoOperations.findAll(Book.class);
         for (Book book : bookList
         ) {
-            if (book.getGenre().getId().equals(((Genre) source).getId())) {
-                book.getGenre().setName(((Genre) source).getName());
+            if (book.getGenre().getId().equals((source).getId())) {
+                book.getGenre().setName((source).getName());
                 mongoOperations.save(book);
             }
         }

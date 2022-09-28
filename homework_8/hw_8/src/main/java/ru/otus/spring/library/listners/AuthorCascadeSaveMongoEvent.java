@@ -16,12 +16,12 @@ public class AuthorCascadeSaveMongoEvent extends AbstractMongoEventListener<Auth
 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Author> event) {
-        Object source = event.getSource();
+        Author source = event.getSource();
         List<Book> bookList = mongoOperations.findAll(Book.class);
         for (Book book : bookList
         ) {
-            if (book.getAuthor().getId().equals(((Author) source).getId())) {
-                book.getAuthor().setName(((Author) source).getName());
+            if (book.getAuthor().getId().equals((source).getId())) {
+                book.getAuthor().setName((source).getName());
                 mongoOperations.save(book);
             }
         }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.transaction.UnexpectedRollbackException;
 import ru.otus.spring.library.service.GenreService;
 
 @ShellComponent
@@ -30,9 +29,6 @@ public class GenreCommands {
 
     @ShellMethod(value = "Delete genre", key = {"gd", "delete_genre"})
     public void deleteGenre(@ShellOption String id) {
-        try {
-            genreService.deleteGenre(id);
-        } catch (UnexpectedRollbackException exception) {
-        }
+        genreService.deleteGenre(id);
     }
 }
