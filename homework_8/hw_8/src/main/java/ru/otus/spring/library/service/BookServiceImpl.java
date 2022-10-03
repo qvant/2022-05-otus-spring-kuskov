@@ -1,25 +1,22 @@
 package ru.otus.spring.library.service;
 
-import org.bson.types.ObjectId;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.domain.Book;
+import ru.otus.spring.library.domain.Genre;
 import ru.otus.spring.library.repository.AuthorRepository;
 import ru.otus.spring.library.repository.BookRepository;
-import ru.otus.spring.library.repository.GenreRepository;
 
 import java.util.List;
 
 @Component
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
-    private final GenreRepository genreRepository;
     private final AuthorRepository authorRepository;
     private final IOService ioService;
 
-    public BookServiceImpl(BookRepository bookRepository, GenreRepository genreRepository, AuthorRepository authorRepository, IOService ioService) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, IOService ioService) {
         this.bookRepository = bookRepository;
-        this.genreRepository = genreRepository;
         this.authorRepository = authorRepository;
         this.ioService = ioService;
     }
@@ -34,39 +31,31 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addBook(String title, ObjectId authorId, ObjectId genreId, String isbn) {
+    public void addBook(String title, String authorId, String genreName, String isbn) {
         var author = authorRepository.findById(authorId);
         if (author.isEmpty()) {
             ioService.print("Автор с id " + authorId + " не существует");
             return;
         }
-        var genre = genreRepository.findById(genreId);
-        if (genre.isEmpty()) {
-            ioService.print("Жанр с id " + authorId + " не существует");
-            return;
-        }
-        Book book = new Book(title, author.get(), genre.get(), isbn);
+        Genre genre = new Genre(genreName);
+        Book book = new Book(title, author.get(), genre, isbn);
         bookRepository.save(book);
     }
 
     @Override
-    public void updateBook(ObjectId id, String title, ObjectId authorId, ObjectId genreId, String isbn) {
+    public void updateBook(String id, String title, String authorId, String genreName, String isbn) {
         var author = authorRepository.findById(authorId);
         if (author.isEmpty()) {
             ioService.print("Автор с id " + authorId + " не существует");
             return;
         }
-        var genre = genreRepository.findById(authorId);
-        if (genre.isEmpty()) {
-            ioService.print("Жанр с id " + authorId + " не существует");
-            return;
-        }
-        Book book = new Book(id, title, author.get(), genre.get(), isbn);
+        var genre = new Genre(genreName);
+        Book book = new Book(id, title, author.get(), genre, isbn);
         bookRepository.save(book);
     }
 
     @Override
-    public void deleteBook(ObjectId id) {
+    public void deleteBook(String id) {
 
         try {
             bookRepository.deleteById(id);

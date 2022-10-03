@@ -1,6 +1,5 @@
 package ru.otus.spring.library.service;
 
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -37,19 +36,12 @@ public class AuthorServiceImplTest {
 
     @Test
     void testUpdateAuthor() {
-        Mockito.when(authorRepository.findById(new ObjectId(EXISTED_AUTHOR_ID))).thenReturn(Optional.of(new Author(new ObjectId(EXISTED_AUTHOR_ID), EXISTED_AUTHOR_NAME)));
+        Mockito.when(authorRepository.findById(EXISTED_AUTHOR_ID)).thenReturn(Optional.of(new Author(EXISTED_AUTHOR_ID, EXISTED_AUTHOR_NAME)));
         authorService.updateAuthor(EXISTED_AUTHOR_ID, NEW_AUTHOR_NAME);
         Mockito.verify(authorRepository).save(authorArgumentCaptor.capture());
         Author capturedAuthor = authorArgumentCaptor.getValue();
-        assertEquals(capturedAuthor.getId().toString(), EXISTED_AUTHOR_ID);
+        assertEquals(capturedAuthor.getId(), EXISTED_AUTHOR_ID);
         assertEquals(capturedAuthor.getName(), NEW_AUTHOR_NAME);
     }
 
-    @Test
-    void testDeleteAuthor() {
-        Mockito.when(authorRepository.findById(new ObjectId(EXISTED_AUTHOR_ID))).thenReturn(Optional.of(new Author(new ObjectId(EXISTED_AUTHOR_ID), EXISTED_AUTHOR_NAME)));
-        authorService.deleteAuthor(EXISTED_AUTHOR_ID);
-        Mockito.verify(authorRepository).deleteById(new ObjectId(EXISTED_AUTHOR_ID));
-
-    }
 }

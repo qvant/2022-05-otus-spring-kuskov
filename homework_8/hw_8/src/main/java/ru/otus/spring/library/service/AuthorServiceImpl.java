@@ -10,12 +10,10 @@ import java.util.List;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final IOService ioService;
-    private final IdConverterService idConverterService;
 
-    public AuthorServiceImpl(IOService ioService, AuthorRepository authorRepository, IdConverterService idConverterService) {
+    public AuthorServiceImpl(IOService ioService, AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
         this.ioService = ioService;
-        this.idConverterService = idConverterService;
     }
 
     @Override
@@ -35,11 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author updateAuthor(String id, String name) {
-        var objectId = idConverterService.convertToObjectId(id);
-        if (objectId == null) {
-            return null;
-        }
-        var author = authorRepository.findById(objectId);
+        var author = authorRepository.findById(id);
         if (author.isEmpty()) {
             ioService.print("Автор с id " + id + " не найден'");
             return null;
@@ -49,13 +43,4 @@ public class AuthorServiceImpl implements AuthorService {
         return author.get();
     }
 
-    @Override
-    public void deleteAuthor(String id) {
-        var objectId = idConverterService.convertToObjectId(id);
-        if (objectId != null) {
-            authorRepository.deleteById(objectId);
-        }
-
-
-    }
 }

@@ -1,6 +1,5 @@
 package ru.otus.spring.library.service;
 
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.domain.Comment;
 import ru.otus.spring.library.repository.BookRepository;
@@ -20,10 +19,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void showBookComments(ObjectId bookId) {
+    public void showBookComments(String bookId) {
         var book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
-            ioService.printWithParameters("Книга [%s] не найдена", bookId.toString());
+            ioService.printWithParameters("Книга [%s] не найдена", bookId);
             return;
         }
         List<Comment> comments = book.get().getComments();
@@ -40,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(ObjectId bookId, String text) {
+    public void addComment(String bookId, String text) {
         var book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
             ioService.print("Книги с id " + bookId + " не существует");
@@ -56,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateComment(ObjectId bookId, int commentId, String text) {
+    public void updateComment(String bookId, int commentId, String text) {
         var book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
             ioService.print("Книги с id " + bookId + " не существует");
@@ -74,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(ObjectId bookId, int commentId) {
+    public void deleteComment(String bookId, int commentId) {
         var book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
             ioService.print("Книги с id " + bookId + " не существует");

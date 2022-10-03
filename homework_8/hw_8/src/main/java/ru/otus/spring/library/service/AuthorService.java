@@ -9,5 +9,4 @@ public interface AuthorService {
 
     Author updateAuthor(String id, String name);
 
-    void deleteAuthor(String id);
 }

@@ -26,9 +26,4 @@ public class AuthorCommands {
         authorService.updateAuthor(id, name);
     }
 
-    @ShellMethod(value = "Delete author", key = {"ad", "delete_author"})
-    public void deleteAuthor(@ShellOption String id) {
-        authorService.deleteAuthor(id);
-
-    }
 }

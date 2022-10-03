@@ -1,7 +1,6 @@
 package ru.otus.spring.library.domain;
 
 import lombok.RequiredArgsConstructor;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,19 +11,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Book {
     @Id
-    private ObjectId id;
+    private String id;
     private String title;
     @DBRef(lazy = false)
     private Author author;
 
-    @DBRef(lazy = false)
     private Genre genre;
     private String isbn;
 
     private List<Comment> comments;
 
 
-    public Book(ObjectId id, String title, Author author, Genre genre, String isbn) {
+    public Book(String id, String title, Author author, Genre genre, String isbn) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -55,11 +53,11 @@ public class Book {
         return isbn;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
