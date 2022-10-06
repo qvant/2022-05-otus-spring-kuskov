@@ -33,14 +33,16 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author updateAuthor(String id, String name) {
-        var author = authorRepository.findById(id);
-        if (author.isEmpty()) {
-            ioService.print("Автор с id " + id + " не найден'");
-            return null;
-        }
-        author.get().setName(name);
-        authorRepository.save(author.get());
-        return author.get();
+        return authorRepository.findById(id).map(a -> {
+            a.setName(name);
+            authorRepository.save(a);
+            return a;
+        }).orElseGet(() ->
+                {
+                    ioService.print("Автор с id " + id + " не найден'");
+                    return null;
+                }
+        );
     }
 
 }

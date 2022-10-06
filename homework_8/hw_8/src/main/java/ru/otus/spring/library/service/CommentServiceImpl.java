@@ -20,71 +20,75 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void showBookComments(String bookId) {
-        var book = bookRepository.findById(bookId);
-        if (book.isEmpty()) {
+        bookRepository.findById(bookId).map(book -> {
+            List<Comment> comments = book.getComments();
+            if (comments == null) {
+                ioService.printWithParameters("Нет комментариев для книги [%s] %s:", book.getId(), book.getTitle());
+                return null;
+            }
+            ioService.printWithParameters("Комментарии для книги [%s] %s:", book.getId(), book.getTitle());
+            long index = 0;
+            for (Comment comment : comments) {
+                ioService.printWithParameters("[%s] %s", index++, comment.getText());
+            }
+            return book;
+        }).orElseGet(() -> {
             ioService.printWithParameters("Книга [%s] не найдена", bookId);
-            return;
-        }
-        List<Comment> comments = book.get().getComments();
-        if (comments == null) {
-            ioService.printWithParameters("Нет комментариев для книги [%s] %s:", book.get().getId(), book.get().getTitle());
-            return;
-        }
-        ioService.printWithParameters("Комментарии для книги [%s] %s:", book.get().getId(), book.get().getTitle());
-        long index = 0;
-        for (Comment comment : comments
-        ) {
-            ioService.printWithParameters("[%s] %s", index++, comment.getText());
-        }
+            return null;
+        });
     }
 
     @Override
     public void addComment(String bookId, String text) {
-        var book = bookRepository.findById(bookId);
-        if (book.isEmpty()) {
+        bookRepository.findById(bookId).map(book -> {
+            List<Comment> comments = book.getComments();
+            if (comments == null) {
+                comments = new ArrayList<Comment>();
+            }
+            comments.add(new Comment(text));
+            book.setComments(comments);
+            bookRepository.save(book);
+            return book;
+        }).orElseGet(() -> {
             ioService.print("Книги с id " + bookId + " не существует");
-            return;
-        }
-        List<Comment> comments = book.get().getComments();
-        if (comments == null) {
-            comments = new ArrayList<Comment>();
-        }
-        comments.add(new Comment(text));
-        book.get().setComments(comments);
-        bookRepository.save(book.get());
+            return null;
+        });
     }
 
     @Override
     public void updateComment(String bookId, int commentId, String text) {
-        var book = bookRepository.findById(bookId);
-        if (book.isEmpty()) {
+        bookRepository.findById(bookId).map(book -> {
+            List<Comment> comments = book.getComments();
+            if (comments == null) {
+                return null;
+            }
+            var comment = comments.get(commentId);
+            comment.setText(text);
+            comments.set(commentId, comment);
+            book.setComments(comments);
+            bookRepository.save(book);
+            return book;
+        }).orElseGet(() -> {
             ioService.print("Книги с id " + bookId + " не существует");
-            return;
-        }
-        List<Comment> comments = book.get().getComments();
-        if (comments == null) {
-            return;
-        }
-        var comment = comments.get(commentId);
-        comment.setText(text);
-        comments.set(commentId, comment);
-        book.get().setComments(comments);
-        bookRepository.save(book.get());
+            return null;
+        });
+
     }
 
     @Override
     public void deleteComment(String bookId, int commentId) {
-        var book = bookRepository.findById(bookId);
-        if (book.isEmpty()) {
+        bookRepository.findById(bookId).map(book -> {
+            List<Comment> comments = book.getComments();
+            if (comments == null) {
+                return null;
+            }
+            comments.remove(commentId);
+            book.setComments(comments);
+            bookRepository.save(book);
+            return book;
+        }).orElseGet(() -> {
             ioService.print("Книги с id " + bookId + " не существует");
-            return;
-        }
-        List<Comment> comments = book.get().getComments();
-        if (comments == null) {
-            return;
-        }
-        comments.remove(commentId);
-        book.get().setComments(comments);
-        bookRepository.save(book.get());
+            return null;
+        });
     }
 }

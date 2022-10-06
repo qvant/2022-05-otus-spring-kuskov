@@ -32,26 +32,31 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void addBook(String title, String authorId, String genreName, String isbn) {
-        var author = authorRepository.findById(authorId);
-        if (author.isEmpty()) {
+        authorRepository.findById(authorId).map(author -> {
+            Genre genre = new Genre(genreName);
+            Book book = new Book(title, author, genre, isbn);
+            bookRepository.save(book);
+            return author;
+        }).orElseGet(() -> {
             ioService.print("Автор с id " + authorId + " не существует");
-            return;
-        }
-        Genre genre = new Genre(genreName);
-        Book book = new Book(title, author.get(), genre, isbn);
-        bookRepository.save(book);
+            return null;
+        });
+
     }
 
     @Override
     public void updateBook(String id, String title, String authorId, String genreName, String isbn) {
-        var author = authorRepository.findById(authorId);
-        if (author.isEmpty()) {
-            ioService.print("Автор с id " + authorId + " не существует");
-            return;
-        }
-        var genre = new Genre(genreName);
-        Book book = new Book(id, title, author.get(), genre, isbn);
-        bookRepository.save(book);
+        authorRepository.findById(authorId).map(author -> {
+            var genre = new Genre(genreName);
+            Book book = new Book(id, title, author, genre, isbn);
+            bookRepository.save(book);
+            return author;
+        }).orElseGet(() -> {
+                    ioService.print("Автор с id " + authorId + " не существует");
+                    return null;
+                }
+        );
+
     }
 
     @Override
