@@ -3,28 +3,19 @@ package ru.otus.spring.library.service;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.domain.Genre;
 import ru.otus.spring.library.exceptions.HasDependentObjectsException;
+import ru.otus.spring.library.exceptions.IncorrectReferenceException;
 import ru.otus.spring.library.repository.GenreRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
-    private final IOService ioService;
 
-    public GenreServiceImpl(GenreRepository genreRepository, IOService ioService) {
+    public GenreServiceImpl(GenreRepository genreRepository) {
         this.genreRepository = genreRepository;
-        this.ioService = ioService;
-    }
-
-    @Override
-    public void showGenres() {
-        List<Genre> genres = this.genreRepository.findAll();
-        for (Genre genre : genres
-        ) {
-            ioService.printWithParameters("[%d] %s", genre.getId(), genre.getName());
-        }
     }
 
 
@@ -47,7 +38,17 @@ public class GenreServiceImpl implements GenreService {
         try {
             genreRepository.deleteByIdWithDependencyException(id);
         } catch (HasDependentObjectsException exception) {
-            ioService.print("Нельзя удалить жанр с id " + id + ", есть зависимости");
+            throw new IncorrectReferenceException("Нельзя удалить жанр с id " + id + ", есть зависимости");
         }
+    }
+
+    @Override
+    public List<Genre> findAll() {
+        return genreRepository.findAll();
+    }
+
+    @Override
+    public Optional<Genre> findById(long id) {
+        return genreRepository.findById(id);
     }
 }

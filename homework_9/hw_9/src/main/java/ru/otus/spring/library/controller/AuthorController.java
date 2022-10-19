@@ -2,34 +2,38 @@ package ru.otus.spring.library.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.spring.library.domain.Author;
-import ru.otus.spring.library.exceptions.HasDependentObjectsException;
-import ru.otus.spring.library.repository.AuthorRepository;
+import ru.otus.spring.library.service.AuthorService;
 
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class AuthorController {
-    private final AuthorRepository authorRepository;
+    private final AuthorService authorService;
 
     @GetMapping("/authors")
     public String listPage(Model model) {
-        List<Author> authors = authorRepository.findAll();
+        List<Author> authors = authorService.findAll();
         model.addAttribute("authors", authors);
         return "authorList";
     }
 
     @GetMapping("/authorEdit")
     public String editPage(@RequestParam("id") long id, Model model) {
-        Author author = authorRepository.findById(id).orElseThrow(NotFoundException::new);
+        Author author = authorService.findById(id).orElseThrow(NotFoundException::new);
         model.addAttribute("author", author);
         return "authorEdit";
+    }
+
+    @PostMapping("/authorEdit")
+    public String authorEdit(@RequestParam("id") Long id, @RequestParam("name") String name) {
+        authorService.updateAuthor(id, name);
+        return "redirect:/authors";
     }
 
     @GetMapping("/authorCreate")
@@ -37,35 +41,22 @@ public class AuthorController {
         return "authorCreate";
     }
 
+    @PostMapping("/authorCreate")
+    public String authorCreate(@RequestParam("name") String name) {
+        authorService.addAuthor(name);
+        return "redirect:/authors";
+    }
+
     @GetMapping("/authorDelete")
     public String deletePage(@RequestParam("id") long id, Model model) {
-        Author author = authorRepository.findById(id).orElseThrow(NotFoundException::new);
+        Author author = authorService.findById(id).orElseThrow(NotFoundException::new);
         model.addAttribute("author", author);
         return "authorDelete";
     }
 
-    @PostMapping("/authorEdit")
-    public String authorEdit(Author author, Model model) {
-        authorRepository.save(author);
-        return "redirect:/authors";
-    }
-
-    @PostMapping("/authorCreate")
-    public String authorCreate(@RequestParam("name") String name) {
-        Author author = new Author(name);
-        authorRepository.save(author);
-        return "redirect:/authors";
-    }
-
     @PostMapping("/authorDelete")
-    @Transactional
-    public String authorDelete(Author author) {
-        try {
-            authorRepository.deleteByIdWithDependencyException(author.getId());
-        } catch (HasDependentObjectsException exception) {
-            throw new RuntimeException(exception.getMessage());
-        }
-
+    public String authorDelete(@RequestParam("id") Long id) {
+        authorService.deleteAuthor(id);
         return "redirect:/authors";
     }
 }

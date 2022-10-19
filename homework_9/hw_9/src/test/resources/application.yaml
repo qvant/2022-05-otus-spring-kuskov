@@ -2,12 +2,18 @@ spring:
   shell:
     interactive:
       enabled: false
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
   sql:
     init:
       mode: always
       data-locations: data.sql
+      schema-locations: schema.sql
   main:
     allow-circular-references: true
   jpa:
     hibernate:
       ddl-auto: none
+    show-sql: true
+    defer-datasource-initialization: true

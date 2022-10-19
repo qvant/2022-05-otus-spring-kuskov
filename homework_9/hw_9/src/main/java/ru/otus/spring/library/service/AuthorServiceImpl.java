@@ -7,24 +7,16 @@ import ru.otus.spring.library.exceptions.HasDependentObjectsException;
 import ru.otus.spring.library.repository.AuthorRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
-    private final IOService ioService;
 
-    public AuthorServiceImpl(IOService ioService, AuthorRepository authorRepository) {
+    public AuthorServiceImpl(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
-        this.ioService = ioService;
     }
 
-    @Override
-    public void showAuthors() {
-        List<Author> authors = this.authorRepository.findAll();
-        for (Author author : authors) {
-            ioService.printWithParameters("[%d] %s", author.getId(), author.getName());
-        }
-    }
 
     @Override
     @Transactional
@@ -48,8 +40,18 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             authorRepository.deleteByIdWithDependencyException(id);
         } catch (HasDependentObjectsException exception) {
-            ioService.print("Нельзя удалить автора с id " + id + ", есть зависимости");
+            throw new RuntimeException("Нельзя удалить автора с id " + id + ", есть зависимости");
         }
 
+    }
+
+    @Override
+    public List<Author> findAll() {
+        return authorRepository.findAll();
+    }
+
+    @Override
+    public Optional<Author> findById(long id) {
+        return authorRepository.findById(id);
     }
 }

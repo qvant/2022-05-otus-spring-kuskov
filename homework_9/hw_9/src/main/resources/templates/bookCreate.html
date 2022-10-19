@@ -30,18 +30,18 @@
 
     <div class="row">
         <label for="book-title-input">Name:</label>
-        <input id="book-title-input" name="title" type="text" value="Анжелика и король"/>
+        <input id="book-title-input" name="title" type="text" value="Анжелика и король" required/>
     </div>
 
     <div class="row">
         <label for="book-isbn-input">ISBN:</label>
-        <input id="book-isbn-input" name="isbn" type="text" value="9999 9999 9999 9999"/>
+        <input id="book-isbn-input" name="isbn" type="text" value="9999 9999 9999 9999" required/>
     </div>
 
     <div class="row">
         <label for="book-author-input">Author:</label>
         <select id="book-author-input" name="author_id">
-            <option th:each="author : ${authors}" th:text="${author.name}" th:value="${author.id}" value="1">Пушкин
+            <option th:each="author : ${authors}" th:text="${author.name}" th:value="${author.id}" value="1" required>Пушкин
             </option>
         </select>
         </th:each>
@@ -50,14 +50,14 @@
     <div class="row">
         <label for="book-genre-input">Genre:</label>
         <select id="book-genre-input" name="genre_id">
-            <option th:each="genre : ${genres}" th:text="${genre.name}" th:value="${genre.id}" value="1">Поэма</option>
+            <option th:each="genre : ${genres}" th:text="${genre.name}" th:value="${genre.id}" value="1" required>Поэма</option>
         </select>
         </th:each>
     </div>
 
     <div class="row">
         <button type="submit">Save</button>
-        <a href="bookList.html" th:href="@{/}">
+        <a href="bookList.html" th:href="@{/books}">
             <button type="button">Cancel</button>
         </a>
     </div>

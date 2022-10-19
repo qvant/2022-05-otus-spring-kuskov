@@ -36,12 +36,12 @@
 
     <div class="row">
         <label for="author-name-input">Name:</label>
-        <input id="author-name-input" name="name" th:value="*{name}" type="text" value="Pulp fiction"/>
+        <input id="author-name-input" name="name" th:value="*{name}" type="text" value="Pulp fiction" required/>
     </div>
 
     <div class="row">
         <button type="submit">Save</button>
-        <a href="authorList.html" th:href="@{/}">
+        <a href="authorList.html" th:href="@{/authors}">
             <button type="button">Cancel</button>
         </a>
     </div>

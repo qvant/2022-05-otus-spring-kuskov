@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "books")
 @NamedEntityGraph(name = "library-book-author-genre-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
-@SequenceGenerator(name = "S_BOOKS", sequenceName = "S_BOOKS", initialValue = 999)
+@SequenceGenerator(name = "S_BOOKS", sequenceName = "S_BOOKS", initialValue = 999, allocationSize = 1)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_BOOKS")
@@ -43,16 +43,32 @@ public class Book {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Author getAuthor() {
         return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public Genre getGenre() {
         return genre;
     }
 
+    public void setGenre(Genre genre) {
+        this.genre = genre;
+    }
+
     public String getIsbn() {
         return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public long getId() {
@@ -61,21 +77,5 @@ public class Book {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
     }
 }

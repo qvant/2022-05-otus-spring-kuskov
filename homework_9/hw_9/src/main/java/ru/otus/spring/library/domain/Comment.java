@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "comments")
-@SequenceGenerator(name = "S_COMMENTS", sequenceName = "S_COMMENTS")
+@SequenceGenerator(name = "S_COMMENTS", sequenceName = "S_COMMENTS", allocationSize = 1)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_COMMENTS")

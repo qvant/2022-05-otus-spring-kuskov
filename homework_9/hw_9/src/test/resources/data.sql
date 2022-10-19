@@ -1,3 +1,7 @@
+delete from comments;
+delete from books;
+delete from AUTHORS;
+delete from GENRES;
 insert into AUTHORS (id, `name`) values (1, 'Пушкин');
 insert into AUTHORS (id, `name`) values (2, 'Лермонтов');
 insert into AUTHORS (id, `name`) values (3, 'А. и Б. Стругацкие');

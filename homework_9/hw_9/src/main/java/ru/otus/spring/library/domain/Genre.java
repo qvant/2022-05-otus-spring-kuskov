@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "genres")
-@SequenceGenerator(name = "S_GENRES", sequenceName = "S_GENRES", initialValue = 999)
+@SequenceGenerator(name = "S_GENRES", sequenceName = "S_GENRES", initialValue = 999, allocationSize = 1)
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_GENRES")
