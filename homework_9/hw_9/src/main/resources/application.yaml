@@ -13,7 +13,7 @@ spring:
     init:
       mode: always
       data-locations: data.sql
-      schema-locations: schema.sqlt
+      schema-locations: schema.sql
   h2:
     console:
       path: /h2-console
