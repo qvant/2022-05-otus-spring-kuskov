@@ -4,7 +4,6 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     initialization-mode: always
-    #initialization-mode: never
   jpa:
     hibernate:
       ddl-auto: none
@@ -14,11 +13,7 @@ spring:
     init:
       mode: always
       data-locations: data.sql
-      schema-locations: schema.sql
-#  data:
-#    jpa:
-#      repositories:
-#        bootstrap-mode: default
+      schema-locations: schema.sqlt
   h2:
     console:
       path: /h2-console
