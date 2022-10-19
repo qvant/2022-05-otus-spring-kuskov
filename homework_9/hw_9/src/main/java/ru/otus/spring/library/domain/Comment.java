@@ -4,9 +4,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "comments")
+@SequenceGenerator(name = "S_COMMENTS", sequenceName = "S_COMMENTS")
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_COMMENTS")
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

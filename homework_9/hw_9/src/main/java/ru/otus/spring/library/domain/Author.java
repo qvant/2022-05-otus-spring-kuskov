@@ -4,9 +4,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "authors")
+@SequenceGenerator(name = "S_AUTHORS", sequenceName = "S_AUTHORS", initialValue = 999)
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_AUTHORS")
     private long id;
     private String name;
 
@@ -26,6 +27,10 @@ public class Author {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getId() {

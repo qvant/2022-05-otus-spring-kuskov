@@ -1,20 +1,24 @@
 spring:
-  shell:
-    interactive:
-      enabled: true
   main:
     allow-circular-references: true
   datasource:
     url: jdbc:h2:mem:testdb
+    initialization-mode: always
+    #initialization-mode: never
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: false
+    show-sql: true
+    defer-datasource-initialization: true
   sql:
     init:
       mode: always
       data-locations: data.sql
       schema-locations: schema.sql
+#  data:
+#    jpa:
+#      repositories:
+#        bootstrap-mode: default
   h2:
     console:
       path: /h2-console
@@ -23,4 +27,4 @@ spring:
         web-allow-others: true
 logging:
   level:
-    root: ERROR
+    root: WARN

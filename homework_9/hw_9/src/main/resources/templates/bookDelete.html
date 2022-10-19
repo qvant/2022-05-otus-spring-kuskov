@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Delete book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<form action="bookDelete.html" id="delete-form" th:action="@{/bookDelete(id=${book.id})}" th:method="post"
+      th:object="${book}">
+    <h3>Book info:</h3>
+
+    <div class="row" hidden>
+        <label for="id-input">ID:</label>
+        <input id="id-input" th:value="*{id}" type="text" value="1"/>
+    </div>
+
+    <div class="row">
+        <label for="book-title-input">Name:</label>
+        <input id="book-title-input" readonly th:value="*{title}" type="text" value="Pulp fiction"/>
+    </div>
+
+    <div class="row">
+        <label for="book-isbn-input">ISBN:</label>
+        <input disabled="disabled" id="book-isbn-input" readonly th:value="*{isbn}" type="text" value="Pulp fiction"/>
+    </div>
+
+    <div class="row">
+        <label for="book-author-input">Author:</label>
+        <input id="book-author-input" readonly th:value="${author}" type="text" value="9999 9999 9999 9999"/>
+    </div>
+
+    <div class="row">
+        <label for="book-genre-input">Genre:</label>
+        <input id="book-genre-input" readonly th:value="${genre}" value="9999 9999 9999 9999"/>
+    </div>
+
+
+    <div class="row">
+        <button type="submit">Delete</button>
+        <a href="bookList.html" th:href="@{/books}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+
+</body>
+</html>
