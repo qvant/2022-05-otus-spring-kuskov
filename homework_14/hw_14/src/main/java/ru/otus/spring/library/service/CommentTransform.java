@@ -15,7 +15,6 @@ public class CommentTransform {
     private final BookTargetRepository bookTargetRepository;
 
     public BookTarget convert(Comment comment) {
-        //TODO: INDEX!!!
         BookTarget book = bookTargetRepository.findByLegacyId(comment.getBook().getId()).orElseThrow(RuntimeException::new);
         log.info("нашли книгу " + book.getTitle() + " для комментария " + comment.getText() + " с id книги " + comment.getBook().getId());
         var comments = book.getComments();

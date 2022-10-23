@@ -25,7 +25,7 @@ import ru.otus.spring.library.domain.source.Book;
 import ru.otus.spring.library.domain.source.Comment;
 import ru.otus.spring.library.service.AuthorTransform;
 import ru.otus.spring.library.service.BookTransform;
-import ru.otus.spring.library.service.CleanUpService;
+import ru.otus.spring.library.service.CheckTargetState;
 import ru.otus.spring.library.service.CommentTransform;
 
 import java.util.List;
@@ -33,13 +33,13 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class JobConfig {
-    public static final String IMPORT_AUTHORS_JOB_NAME = "importAuthorsJob";
+    public static final String IMPORT_LIBRARY_JOB_NAME = "importLibraryJob";
     private static final int CHUNK_SIZE = 5;
     private final Logger logger = LoggerFactory.getLogger("Batch");
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
-    private final CleanUpService cleanUpService;
     private final AuthorTransform authorTransform;
+    private final CheckTargetState checkTargetState;
 
 
     @StepScope
@@ -73,24 +73,25 @@ public class JobConfig {
     }
 
     @Bean
-    public Job importAuthorsJob(Step migrateAuthorsStep, Step migrateBooksStep, Step cleanUpStep, Step gatherAuthorsStep, Step migrateCommentsStep) {
-        return jobBuilderFactory.get(IMPORT_AUTHORS_JOB_NAME)
+    public Job importAuthorsJob(Step migrateAuthorsStep, Step migrateBooksStep, Step gatherAuthorsStep, Step migrateCommentsStep,
+                                Step checkMigrationPossible) {
+        return jobBuilderFactory.get(IMPORT_LIBRARY_JOB_NAME)
                 .incrementer(new RunIdIncrementer())
-                .flow(migrateAuthorsStep)
+                .flow(checkMigrationPossible)
+                .next(migrateAuthorsStep)
                 .next(gatherAuthorsStep)
                 .next(migrateBooksStep)
                 .next(migrateCommentsStep)
-                .next(cleanUpStep)
                 .end()
                 .listener(new JobExecutionListener() {
                     @Override
                     public void beforeJob(@NonNull JobExecution jobExecution) {
-                        logger.info("Начало " + IMPORT_AUTHORS_JOB_NAME);
+                        logger.info("Начало " + IMPORT_LIBRARY_JOB_NAME);
                     }
 
                     @Override
                     public void afterJob(@NonNull JobExecution jobExecution) {
-                        logger.info("Конец " + IMPORT_AUTHORS_JOB_NAME);
+                        logger.info("Конец " + IMPORT_LIBRARY_JOB_NAME);
                     }
                 })
                 .build();
@@ -104,7 +105,6 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                //Все до build нужно только для логов
                 .listener(new ItemReadListener<>() {
                     public void beforeRead() {
 
@@ -169,7 +169,6 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                //Все до build нужно только для логов
                 .listener(new ItemReadListener<>() {
                     @Override
                     public void beforeRead() {
@@ -234,7 +233,6 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                //Все до build нужно только для логов
                 .listener(new ItemReadListener<>() {
                     @Override
                     public void beforeRead() {
@@ -292,23 +290,6 @@ public class JobConfig {
     }
 
     @Bean
-    public MethodInvokingTaskletAdapter cleanUpTasklet() {
-        MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
-
-        adapter.setTargetObject(cleanUpService);
-        adapter.setTargetMethod("cleanUp");
-
-        return adapter;
-    }
-
-    @Bean
-    public Step cleanUpStep() {
-        return this.stepBuilderFactory.get("cleanUpStep")
-                .tasklet(cleanUpTasklet())
-                .build();
-    }
-
-    @Bean
     public MethodInvokingTaskletAdapter gatherAuthorsTasklet() {
         MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
 
@@ -322,6 +303,23 @@ public class JobConfig {
     public Step gatherAuthorsStep() {
         return this.stepBuilderFactory.get("gatherAuthorsStep")
                 .tasklet(gatherAuthorsTasklet())
+                .build();
+    }
+
+    @Bean
+    public MethodInvokingTaskletAdapter checkMigrationPossibleTasklet() {
+        MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
+
+        adapter.setTargetObject(checkTargetState);
+        adapter.setTargetMethod("checkMigrationPossible");
+
+        return adapter;
+    }
+
+    @Bean
+    public Step checkMigrationPossible() {
+        return this.stepBuilderFactory.get("checkMigrationPossible")
+                .tasklet(checkMigrationPossibleTasklet())
                 .build();
     }
 

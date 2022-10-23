@@ -23,9 +23,10 @@ spring:
         web-allow-others: true
   data:
     mongodb:
-      database: library2
+      database: migrationTarget
       port: 27017
       host: localhost
+      auto-index-creation: true
 logging:
   level:
     root: INFO

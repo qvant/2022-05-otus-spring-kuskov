@@ -12,7 +12,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.spring.library.service.RollbackMigrationService;
 
-import static ru.otus.spring.library.config.JobConfig.IMPORT_AUTHORS_JOB_NAME;
+import static ru.otus.spring.library.config.JobConfig.IMPORT_LIBRARY_JOB_NAME;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class MigrationCommands {
     @ShellMethod(value = "showInfo", key = "i")
     public void showInfo() {
         System.out.println(jobExplorer.getJobNames());
-        System.out.println(jobExplorer.getLastJobInstance(IMPORT_AUTHORS_JOB_NAME));
+        System.out.println(jobExplorer.getLastJobInstance(IMPORT_LIBRARY_JOB_NAME));
     }
 
     @ShellMethod(value = "rollback", key = {"r", "rollback"})

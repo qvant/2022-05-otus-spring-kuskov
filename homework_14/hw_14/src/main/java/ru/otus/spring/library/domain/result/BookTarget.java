@@ -2,6 +2,7 @@ package ru.otus.spring.library.domain.result;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ru.otus.spring.library.domain.source.Genre;
@@ -14,6 +15,7 @@ import java.util.List;
 public class BookTarget {
     @Id
     private String id;
+    @Indexed()
     private long legacyId;
     private String title;
     @DBRef(lazy = false)
