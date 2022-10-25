@@ -11,11 +11,12 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.data.MongoItemWriter;
+import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.builder.MongoItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.lang.NonNull;
 import ru.otus.spring.library.domain.result.AuthorTarget;
@@ -23,11 +24,14 @@ import ru.otus.spring.library.domain.result.BookTarget;
 import ru.otus.spring.library.domain.source.Author;
 import ru.otus.spring.library.domain.source.Book;
 import ru.otus.spring.library.domain.source.Comment;
+import ru.otus.spring.library.repository.source.AuthorRepository;
+import ru.otus.spring.library.repository.source.BookRepository;
 import ru.otus.spring.library.service.AuthorTransform;
 import ru.otus.spring.library.service.BookTransform;
 import ru.otus.spring.library.service.CheckTargetState;
 import ru.otus.spring.library.service.CommentTransform;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Configuration
@@ -41,47 +45,63 @@ public class JobConfig {
     private final AuthorTransform authorTransform;
     private final CheckTargetState checkTargetState;
 
+    @StepScope
+    @Bean
+    public RepositoryItemReader<Author> authorRepositoryItemReader(AuthorRepository authorRepository) {
+        RepositoryItemReader<Author> reader = new RepositoryItemReader<>();
+        reader.setRepository(authorRepository);
+        reader.setMethodName("findAll");
+        HashMap<String, Sort.Direction> sorts = new HashMap<>();
+        sorts.put("id", Sort.Direction.ASC);
+        reader.setSort(sorts);
+        return reader;
+    }
 
     @StepScope
+    @Bean
+    public RepositoryItemReader<Book> bookRepositoryItemReader(BookRepository bookRepository) {
+        RepositoryItemReader<Book> reader = new RepositoryItemReader<>();
+        reader.setRepository(bookRepository);
+        reader.setMethodName("findAll");
+        HashMap<String, Sort.Direction> sorts = new HashMap<>();
+        sorts.put("id", Sort.Direction.ASC);
+        reader.setSort(sorts);
+        return reader;
+    }
+
     @Bean
     public ItemProcessor<Author, AuthorTarget> authorProcessor(AuthorTransform authorTransform) {
         return authorTransform::convert;
     }
 
-    @StepScope
     @Bean
     public MongoItemWriter<AuthorTarget> authorTargetMongoItemWriter(MongoTemplate mongoTemplate) {
         return new MongoItemWriterBuilder<AuthorTarget>().template(mongoTemplate).collection("authors").build();
     }
 
-    @StepScope
     @Bean
     public ItemProcessor<Book, BookTarget> bookProcessor(BookTransform bookTransform) {
         return bookTransform::convert;
     }
 
-    @StepScope
     @Bean
     public ItemProcessor<Comment, BookTarget> commentProcessor(CommentTransform commentTransform) {
         return commentTransform::convert;
     }
 
-    @StepScope
     @Bean
     public MongoItemWriter<BookTarget> bookTargetMongoItemWriter(MongoTemplate mongoTemplate) {
         return new MongoItemWriterBuilder<BookTarget>().template(mongoTemplate).collection("books").build();
     }
 
     @Bean
-    public Job importAuthorsJob(Step migrateAuthorsStep, Step migrateBooksStep, Step gatherAuthorsStep, Step migrateCommentsStep,
+    public Job importAuthorsJob(Step migrateAuthorsStep, Step migrateBooksStep,
                                 Step checkMigrationPossible) {
         return jobBuilderFactory.get(IMPORT_LIBRARY_JOB_NAME)
                 .incrementer(new RunIdIncrementer())
                 .flow(checkMigrationPossible)
                 .next(migrateAuthorsStep)
-                .next(gatherAuthorsStep)
                 .next(migrateBooksStep)
-                .next(migrateCommentsStep)
                 .end()
                 .listener(new JobExecutionListener() {
                     @Override
@@ -98,7 +118,7 @@ public class JobConfig {
     }
 
     @Bean
-    public Step migrateAuthorsStep(ItemReader<Author> reader, MongoItemWriter<AuthorTarget> writer,
+    public Step migrateAuthorsStep(RepositoryItemReader<Author> reader, MongoItemWriter<AuthorTarget> writer,
                                    ItemProcessor<Author, AuthorTarget> itemProcessor) {
         return stepBuilderFactory.get("step1")
                 .<Author, AuthorTarget>chunk(CHUNK_SIZE)
@@ -162,7 +182,7 @@ public class JobConfig {
     }
 
     @Bean
-    public Step migrateBooksStep(ItemReader<Book> reader, MongoItemWriter<BookTarget> writer,
+    public Step migrateBooksStep(RepositoryItemReader<Book> reader, MongoItemWriter<BookTarget> writer,
                                  ItemProcessor<Book, BookTarget> itemProcessor) {
         return stepBuilderFactory.get("step2")
                 .<Book, BookTarget>chunk(CHUNK_SIZE)
@@ -222,87 +242,6 @@ public class JobConfig {
                         logger.info("Ошибка пачки книг");
                     }
                 })
-                .build();
-    }
-
-    @Bean
-    public Step migrateCommentsStep(ItemReader<Comment> reader, MongoItemWriter<BookTarget> writer,
-                                    ItemProcessor<Comment, BookTarget> itemProcessor) {
-        return stepBuilderFactory.get("step2")
-                .<Comment, BookTarget>chunk(CHUNK_SIZE)
-                .reader(reader)
-                .processor(itemProcessor)
-                .writer(writer)
-                .listener(new ItemReadListener<>() {
-                    @Override
-                    public void beforeRead() {
-                        logger.info("Начало чтения комментариев 1");
-                    }
-
-                    public void afterRead(@NonNull Comment o) {
-                        logger.info("Конец чтения комментариев");
-                    }
-
-                    public void onReadError(@NonNull Exception e) {
-                        logger.info("Ошибка комментариев");
-                    }
-                })
-                .listener(new ItemWriteListener<>() {
-                    public void beforeWrite(@NonNull List list) {
-                        logger.info("Начало записи комментариев");
-                    }
-
-                    public void afterWrite(@NonNull List list) {
-                        logger.info("Конец записи комментариев");
-                    }
-
-                    public void onWriteError(@NonNull Exception e, @NonNull List list) {
-                        logger.info("Ошибка комментариев");
-                    }
-                })
-                .listener(new ItemProcessListener<>() {
-                    public void beforeProcess(Comment o) {
-                        logger.info("Начало обработки комментариев");
-                    }
-
-                    public void afterProcess(@NonNull Comment o, BookTarget o2) {
-                        logger.info("Конец обработки комментариев");
-                    }
-
-                    public void onProcessError(@NonNull Comment o, @NonNull Exception e) {
-                        logger.info("Ошибка обработки");
-                    }
-                })
-                .listener(new ChunkListener() {
-                    public void beforeChunk(@NonNull ChunkContext chunkContext) {
-                        logger.info("Начало пачки комментариев");
-                    }
-
-                    public void afterChunk(@NonNull ChunkContext chunkContext) {
-                        logger.info("Конец пачки комментариев");
-                    }
-
-                    public void afterChunkError(@NonNull ChunkContext chunkContext) {
-                        logger.info("Ошибка пачки комментариев");
-                    }
-                })
-                .build();
-    }
-
-    @Bean
-    public MethodInvokingTaskletAdapter gatherAuthorsTasklet() {
-        MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
-
-        adapter.setTargetObject(authorTransform);
-        adapter.setTargetMethod("gatherAuthors");
-
-        return adapter;
-    }
-
-    @Bean
-    public Step gatherAuthorsStep() {
-        return this.stepBuilderFactory.get("gatherAuthorsStep")
-                .tasklet(gatherAuthorsTasklet())
                 .build();
     }
 

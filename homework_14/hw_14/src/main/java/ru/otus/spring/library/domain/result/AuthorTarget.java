@@ -1,5 +1,6 @@
 package ru.otus.spring.library.domain.result;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +13,10 @@ public class AuthorTarget {
 
     public AuthorTarget() {
 
+    }
+
+    public AuthorTarget(ObjectId objectId) {
+        this.id = objectId.toString();
     }
 
     public AuthorTarget(String id, String name, long legacyId) {

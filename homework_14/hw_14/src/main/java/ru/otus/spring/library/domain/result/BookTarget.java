@@ -1,13 +1,13 @@
 package ru.otus.spring.library.domain.result;
 
 import lombok.RequiredArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ru.otus.spring.library.domain.source.Genre;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "books")
@@ -26,24 +26,13 @@ public class BookTarget {
 
     private List<CommentTarget> comments;
 
-
-    public BookTarget(String id, String title, AuthorTarget author, Genre genre, String isbn, long legacyId) {
-        this.id = id;
+    public BookTarget(String title, ObjectId author, Genre genre, String isbn, long legacyId, List<CommentTarget> comments) {
         this.title = title;
-        this.author = author;
+        this.author = new AuthorTarget(author);
         this.genre = genre;
         this.isbn = isbn;
         this.legacyId = legacyId;
-        this.comments = new ArrayList<CommentTarget>();
-    }
-
-    public BookTarget(String title, AuthorTarget author, Genre genre, String isbn, long legacyId) {
-        this.title = title;
-        this.author = author;
-        this.genre = genre;
-        this.isbn = isbn;
-        this.legacyId = legacyId;
-        this.comments = new ArrayList<CommentTarget>();
+        this.comments = comments;
     }
 
     public String getTitle() {
