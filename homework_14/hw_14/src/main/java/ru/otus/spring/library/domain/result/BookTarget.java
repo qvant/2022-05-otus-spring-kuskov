@@ -15,7 +15,6 @@ import java.util.List;
 public class BookTarget {
     @Id
     private String id;
-    @Indexed()
     private long legacyId;
     private String title;
     @DBRef(lazy = false)
