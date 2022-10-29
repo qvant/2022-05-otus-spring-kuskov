@@ -13,12 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @Slf4j
 public class AuthorTransform {
-    private final AuthorTargetRepository authorRepository;
     private final Map<Long, ObjectId> authorMap;
 
-    public AuthorTransform(AuthorTargetRepository authorTargetRepository) {
-        this.authorRepository = authorTargetRepository;
-        this.authorMap = new ConcurrentHashMap<Long, ObjectId>();
+    public AuthorTransform() {
+        this.authorMap = new ConcurrentHashMap<>();
     }
 
     public AuthorTarget convert(Author author) {
