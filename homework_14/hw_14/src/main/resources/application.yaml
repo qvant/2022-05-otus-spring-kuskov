@@ -1,0 +1,32 @@
+spring:
+  shell:
+    interactive:
+      enabled: true
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+      schema-locations: schema.sql
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+      settings:
+        web-allow-others: true
+  data:
+    mongodb:
+      database: migrationTarget
+      port: 27017
+      host: localhost
+      auto-index-creation: true
+logging:
+  level:
+    root: INFO
