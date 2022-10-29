@@ -23,13 +23,11 @@ import ru.otus.spring.library.domain.result.AuthorTarget;
 import ru.otus.spring.library.domain.result.BookTarget;
 import ru.otus.spring.library.domain.source.Author;
 import ru.otus.spring.library.domain.source.Book;
-import ru.otus.spring.library.domain.source.Comment;
 import ru.otus.spring.library.repository.source.AuthorRepository;
 import ru.otus.spring.library.repository.source.BookRepository;
 import ru.otus.spring.library.service.AuthorTransform;
 import ru.otus.spring.library.service.BookTransform;
 import ru.otus.spring.library.service.CheckTargetState;
-import ru.otus.spring.library.service.CommentTransform;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,11 +80,6 @@ public class JobConfig {
     @Bean
     public ItemProcessor<Book, BookTarget> bookProcessor(BookTransform bookTransform) {
         return bookTransform::convert;
-    }
-
-    @Bean
-    public ItemProcessor<Comment, BookTarget> commentProcessor(CommentTransform commentTransform) {
-        return commentTransform::convert;
     }
 
     @Bean
