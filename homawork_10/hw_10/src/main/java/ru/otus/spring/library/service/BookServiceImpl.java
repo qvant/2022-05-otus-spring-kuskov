@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void updateBook(long id, String title, long authorId, long genreId, String isbn) {
         Author author = authorRepository.findById(authorId).orElseThrow(IncorrectReferenceException::new);
-        Genre genre = genreRepository.findById(authorId).orElseThrow(IncorrectReferenceException::new);
+        Genre genre = genreRepository.findById(genreId).orElseThrow(IncorrectReferenceException::new);
         Book book = new Book(id, title, author, genre, isbn);
         bookRepository.save(book);
     }

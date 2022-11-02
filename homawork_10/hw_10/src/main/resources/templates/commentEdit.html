@@ -22,30 +22,55 @@
         }
 
     </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
-<form action="commentEdit.html" id="edit-form" th:action="@{/commentEdit(id=${comment.id})}" th:method="post"
-      th:object="${comment}">
+<form action="/api/commentEdit" id="edit-form" method="post">
     <h3>Comment:</h3>
 
     <div class="row" hidden>
         <label for="id-input">ID:</label>
-        <input id="id-input" readonly="readonly" th:value="*{id}" type="text" value="1"/>
+        <input id="id-input" name="id" readonly="readonly" type="text" value="1"/>
     </div>
 
     <div class="row">
         <label for="comment-text-input">Name:</label>
-        <input id="comment-text-input" name="text" th:value="*{text}" type="text" value="Pulp fiction" required/>
+        <input id="comment-text-input" name="text" type="text" value="Pulp fiction" required/>
     </div>
+
+    <div class="row" hidden>
+        <label for="comment-book-input">Name:</label>
+        <input id="comment-book-input" name="bookId" type="text" value="Pulp fiction" required/>
+    </div>
+
 
     <div class="row">
         <button type="submit">Save</button>
-        <a href="commentList.html" th:href="@{/comments(book_id=${book_id})}">
+        <a href="commentList.html" id="link-back">
             <button type="button">Cancel</button>
         </a>
     </div>
+
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.get('/api/comment?id='+ urlParams.get('id')).done(function (comment) {
+                val = document.getElementById('id-input');
+                val.value = comment.id
+                val = document.getElementById('comment-text-input');
+                val.value = comment.text
+                val = document.getElementById('comment-book-input');
+                val.value = comment.bookId
+                val = document.getElementById('link-back');
+                val.href = "/comments?book_id=" + comment.bookId
+        })
+    });
+
+    </script>
 </form>
+
 
 </body>
 </html>

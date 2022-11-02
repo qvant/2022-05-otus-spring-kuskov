@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_BOOKS")
-    private long id;
+    private Long id;
     private String title;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
@@ -24,7 +24,7 @@ public class Book {
 
     }
 
-    public Book(long id, String title, Author author, Genre genre, String isbn) {
+    public Book(Long id, String title, Author author, Genre genre, String isbn) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -71,11 +71,11 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

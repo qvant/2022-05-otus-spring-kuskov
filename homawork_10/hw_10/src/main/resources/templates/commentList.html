@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Comments</title>
@@ -25,13 +25,14 @@
 
 
     </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<a href="root.html" th:href="@{/}">Back to root</a>
+<a href="/">Back to root</a>
 <br>
-<a href="root.html" th:href="@{/books}">Back to books</a>
+<a href="/books">Back to books</a>
 <br>
-<a href="commentNew.html" th:href="@{/commentCreate(book_id=${book_id})}">Create new comment</a>
+<a href="commentNew.html" id="comment-new-top">Create new comment</a>
 <table class="comments">
     <thead>
     <tr>
@@ -42,22 +43,45 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="comment : ${comments}">
-        <td hidden th:text="${comment.id}">1</td>
-        <td th:text="${comment.text}">AAAAAAAAAAAAAAAAAA</td>
-        <td>
-            <a href="commentEdit.html" th:href="@{/commentEdit(id=${comment.id})}">Edit</a>
-        </td>
-        <td>
-            <a href="commentDelete.html" th:href="@{/commentDelete(id=${comment.id})}">Delete</a>
-        </td>
-    </tr>
     </tbody>
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.get('/api/comments?book_id='+ urlParams.get('book_id')).done(function (comments) {
+            comments.forEach(function (comment) {
+                $('tbody').append(`
+                    <tr>
+                        <td hidden>${comment.id}</td>
+                        <td>${comment.text}</td>
+                        <td>
+                            <a href="/commentEdit?id=${comment.id}">Edit</a>
+                        </td>
+                        <td>
+                            <a href="/commentDelete?id=${comment.id}">Delete</a>
+                        </td>
+                    </tr>
+                `)
+            });
+        })
+    });
+</script>
 </table>
-<a href="commentNew.html" th:href="@{/commentCreate(book_id=${book_id})}">Create new comment</a>
+<a href="commentCreate(book_id=${book_id})" id="comment-new-bottom">Create new comment</a>
 <br>
-<a href="root.html" th:href="@{/books}">Back to books</a>
+<script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        val = document.getElementById('comment-new-bottom');
+        val.href = "commentCreate?book_id=" + urlParams.get('book_id')
+        val = document.getElementById('comment-new-top');
+        val.href = "commentCreate?book_id=" + urlParams.get('book_id')
+    });
+
+    </script>
+<a href="/books">Back to books</a>
 <br>
-<a href="root.html" th:href="@{/}">Back to root</a>
+<a href="/">Back to root</a>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>Edit book</title>
@@ -22,54 +22,82 @@
         }
 
     </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
-<form action="bookEdit.html" id="edit-form" th:action="@{/bookEdit(id=${book.id})}" th:method="post"
-      th:object="${book}">
+<form action="/api/bookEdit" id="edit-form" method="post">
     <h3>Book info:</h3>
-
     <div class="row" hidden>
         <label for="id-input">ID:</label>
-        <input id="id-input" readonly="readonly" th:value="*{id}" type="text" value="1"/>
+        <input id="id-input" name="id" value="" type="text" required/>
     </div>
-
     <div class="row">
-        <label for="book-title-input">Name:</label>
-        <input id="book-title-input" name="title" th:value="*{title}" type="text" value="Pulp fiction" required/>
+        <label for="book-title-input">Title:</label>
+        <input id="book-title-input" name="title" value="" type="text" required/>
     </div>
-
     <div class="row">
         <label for="book-isbn-input">ISBN:</label>
-        <input id="book-isbn-input" name="isbn" th:value="*{isbn}" type="text" value="9999 9999 9999 9999" required/>
+        <input id="book-isbn-input" name="isbn" type="text" value="" required/>
     </div>
-
     <div class="row">
         <label for="book-author-input">Author:</label>
-        <select id="book-author-input" name="author_id">
-            <option th:each="author : ${authors}" th:selected="${author.id == book.author.id}" th:text="${author.name}" th:value="${author.id}"
-                    value="1" required>Пушкин
-            </option>
-        </select>
-        </th:each>
+        <select id="book-author-input" name="authorId"></select>
     </div>
-
     <div class="row">
         <label for="book-genre-input">Genre:</label>
-        <select id="book-genre-input" name="genre_id">
-            <option th:each="genre : ${genres}" th:selected="${genre.id == book.genre.id}" th:text="${genre.name}" th:value="${genre.id}"
-                    value="1" required>Поэма
-            </option>
-        </select>
-        </th:each>
+        <select id="book-genre-input" name="genreId"></select>
     </div>
-
     <div class="row">
         <button type="submit">Save</button>
-        <a href="bookList.html" th:href="@{/books}">
+        <a href="/books">
             <button type="button">Cancel</button>
         </a>
     </div>
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.get('/api/book?id='+ urlParams.get('id')).done(function (book) {
+                val = document.getElementById('id-input');
+                val.value = book.id
+                val = document.getElementById('book-title-input');
+                val.value = book.title
+                val = document.getElementById('book-isbn-input');
+                val.value = book.isbn
+                $.get('/api/authors').done(function (authors) {
+                    select = document.getElementById('book-author-input');
+                    authors.forEach(function (author) {
+                        var option = document.createElement('option');
+                        option.value = author.id
+                        option.text = author.name
+                        if (author.id == book.authorId){
+                            select.value = author.id
+                            option.selected = 'selected'
+                        }
+                        select.appendChild(option)
+                    });
+                })
+                $.get('/api/genres').done(function (genres) {
+                    select = document.getElementById('book-genre-input');
+                    genres.forEach(function (genre) {
+                        var option = document.createElement('option');
+                        option.value = genre.id
+                        option.text = genre.name
+                        if (genre.id == book.genreId){
+                            select.value = genre.id
+                            option.selected = 'selected'
+                        }
+                        select.appendChild(option)
+                    });
+                })
+        })
+    });
+
+    </script>
+
+
+
 </form>
 
 </body>

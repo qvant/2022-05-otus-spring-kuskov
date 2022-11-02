@@ -59,6 +59,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+			<version>3.5.1</version>
+		</dependency>
+
 
 	</dependencies>
 
@@ -67,8 +73,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${project.parent.version}</version>
 			</plugin>
 		</plugins>
+
 	</build>
 
 </project>

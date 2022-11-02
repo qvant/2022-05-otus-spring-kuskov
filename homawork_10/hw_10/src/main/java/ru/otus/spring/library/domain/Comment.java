@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_COMMENTS")
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
@@ -26,7 +26,7 @@ public class Comment {
         this.text = text;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
