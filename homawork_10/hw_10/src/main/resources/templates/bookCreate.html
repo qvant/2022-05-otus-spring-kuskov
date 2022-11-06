@@ -26,8 +26,29 @@
 </head>
 <body>
 
-<form action="/api/bookEdit" id="new-form" method="post">
     <h3>New book:</h3>
+
+    <script>
+      function postBook() {
+        var data = {"title": document.getElementById('book-title-input').value,
+                    "isbn": document.getElementById('book-isbn-input').value,
+                    "authorId": document.getElementById('book-author-input').value,
+                    "genreId": document.getElementById('book-genre-input').value,
+                    };
+        $.ajax({
+           url: '/api/books/',
+           type: 'POST',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/books');
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
 
     <div class="row">
         <label for="book-title-input">Title:</label>
@@ -82,12 +103,11 @@
     </div>
 
     <div class="row">
-        <button type="submit">Save</button>
+        <button onclick="postBook()">Save</button>
         <a href="/books">
             <button type="button">Cancel</button>
         </a>
     </div>
-</form>
 
 </body>
 </html>

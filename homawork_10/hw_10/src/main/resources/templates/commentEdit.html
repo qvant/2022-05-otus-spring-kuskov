@@ -26,8 +26,31 @@
 </head>
 <body>
 
-<form action="/api/commentEdit" id="edit-form" method="post">
     <h3>Comment:</h3>
+
+    <script>
+      function putComment() {
+
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var data = {"id": document.getElementById('id-input').value,
+                    "text": document.getElementById('comment-text-input').value,
+                    "bookId": document.getElementById('comment-book-input').value
+                    };
+        $.ajax({
+           url: '/api/comments/'+ urlParams.get('id'),
+           type: 'PUT',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/comments?book_id=' + data['bookId']);
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
 
     <div class="row" hidden>
         <label for="id-input">ID:</label>
@@ -46,7 +69,7 @@
 
 
     <div class="row">
-        <button type="submit">Save</button>
+        <button onclick="putComment()">Save</button>
         <a href="commentList.html" id="link-back">
             <button type="button">Cancel</button>
         </a>
@@ -56,7 +79,7 @@
     $(function () {
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
-        $.get('/api/comment?id='+ urlParams.get('id')).done(function (comment) {
+        $.get('/api/comments/'+ urlParams.get('id')).done(function (comment) {
                 val = document.getElementById('id-input');
                 val.value = comment.id
                 val = document.getElementById('comment-text-input');

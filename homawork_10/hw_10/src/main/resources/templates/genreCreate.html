@@ -22,12 +22,31 @@
         }
 
     </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
-
-<form id="new-form" action="/api/genreEdit" method="post">
     <h3>Genre Info:</h3>
+
+    <script>
+      function postGenre() {
+        var data = {"name": document.getElementById('genre-name-input').value};
+        $.ajax({
+           url: '/api/genres/',
+           type: 'POST',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/genres');
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+
+
 
     <div class="row">
         <label for="genre-name-input">Name:</label>
@@ -35,12 +54,11 @@
     </div>
 
     <div class="row">
-        <button type="submit">Save</button>
+        <button onclick="postGenre()">Save</button>
         <a href="/genres">
             <button type="button">Cancel</button>
         </a>
     </div>
-</form>
 
 </body>
 </html>

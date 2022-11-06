@@ -26,16 +26,35 @@
 </head>
 <body>
 
-<form id="edit-form" method="post">
     <h3>Genre Info:</h3>
+
+    <script>
+      function putGenre() {
+
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var data = {"id": document.getElementById('id-input').value, "name": document.getElementById('genre-name-input').value};
+        $.ajax({
+           url: '/api/genres/'+ urlParams.get('id'),
+           type: 'PUT',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/genres')
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
 
     <script>
     $(function () {
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
-        $.get('/api/genre?id='+ urlParams.get('id')).done(function (genre) {
-                $('form').append(`
-                <form action="/api/genreEdit" id="edit-form" method="post">
+        $.get('/api/genres/'+ urlParams.get('id')).done(function (genre) {
+                $('body').append(`
                     <div class="row" hidden>
                         <label for="id-input">ID:</label>
                         <input id="id-input" name="id" value="${genre.id}" type="text" required/>
@@ -45,7 +64,7 @@
                         <input id="genre-name-input" name="name" value="${genre.name}" type="text" required/>
                     </div>
                     <div class="row">
-                        <button type="submit"/>Save</button>
+                        <button onclick="putGenre()"/>Save</button>
                         <a href="/genres">
                             <button type="button">Cancel</button>
                         </a>
@@ -57,7 +76,6 @@
     });
 
     </script>
-</form>
 
 </body>
 </html>

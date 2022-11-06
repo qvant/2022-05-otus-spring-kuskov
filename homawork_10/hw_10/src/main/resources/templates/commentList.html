@@ -48,7 +48,7 @@
     $(function () {
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
-        $.get('/api/comments?book_id='+ urlParams.get('book_id')).done(function (comments) {
+        $.get('/api/books/'+ urlParams.get('book_id') + '/comments/').done(function (comments) {
             comments.forEach(function (comment) {
                 $('tbody').append(`
                     <tr>

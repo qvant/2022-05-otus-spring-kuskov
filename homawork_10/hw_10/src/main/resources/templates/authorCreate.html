@@ -34,10 +34,9 @@
         $.ajax({
            url: '/api/authors/',
            type: 'POST',
-           async: false,
            contentType: 'application/json',
            data: JSON.stringify(data),
-           done: function(result) {
+           success: function(result) {
                 $(location).prop('href', '/authors');
             },
             error: function(result) {
@@ -53,9 +52,7 @@
     </div>
 
     <div class="row">
-        <a href="authors">
-            <button onclick="postAuthor()">Save</button>
-        </a>
+        <button onclick="postAuthor()">Save</button>
         <a href="authors">
             <button type="button">Cancel</button>
         </a>

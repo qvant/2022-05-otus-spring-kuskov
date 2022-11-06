@@ -1,11 +1,7 @@
 package ru.otus.spring.library.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.library.dto.CommentDto;
 import ru.otus.spring.library.exceptions.IncorrectReferenceException;
 import ru.otus.spring.library.service.CommentService;
@@ -19,30 +15,29 @@ import java.util.stream.Collectors;
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping("api/comments")
-    public List<CommentDto> getBookComments(@RequestParam("book_id") Long bookId) {
+    @GetMapping("api/books/{id}/comments/")
+    public List<CommentDto> getBookComments(@PathVariable("id") Long bookId) {
         return commentService.findByBookId(bookId).stream().map(CommentDto::toDto).collect(Collectors.toList());
     }
 
-    @GetMapping("api/comment")
-    public Optional<CommentDto> getComment(Long id) {
+    @GetMapping("api/comments/{id}")
+    public Optional<CommentDto> getComment(@PathVariable("id") Long id) {
         return commentService.findById(id).map(CommentDto::toDto);
     }
 
-    @PostMapping("api/commentEdit")
-    public RedirectView saveComment(CommentDto commentDto) {
-        if (commentDto.getId() == null) {
-            commentService.addComment(commentDto.getBookId(), commentDto.getText());
-        } else {
-            commentService.updateComment(commentDto.getId(), commentDto.getText());
-        }
-        return new RedirectView("/comments?book_id=" + commentDto.getBookId());
+    @PostMapping("api/comments")
+    public void saveComment(@RequestBody CommentDto commentDto) {
+        commentService.addComment(commentDto.getBookId(), commentDto.getText());
     }
 
-    @PostMapping("api/commentDelete")
-    public RedirectView deleteComment(Long id) {
+    @PutMapping({"api/comments", "api/comments/{id}"})
+    public void editComment(@RequestBody CommentDto commentDto) {
+        commentService.updateComment(commentDto.getId(), commentDto.getText());
+    }
+
+    @DeleteMapping("api/comments/{id}")
+    public void deleteComment(@PathVariable Long id) {
         long bookId = commentService.findById(id).orElseThrow(IncorrectReferenceException::new).getBook().getId();
         commentService.deleteComment(id);
-        return new RedirectView("/comments?book_id=" + bookId);
     }
 }

@@ -26,8 +26,25 @@
 </head>
 <body>
 
-<form action="/api/commentDelete" id="delete-form" method="post">
     <h3>Comment Info:</h3>
+
+    <script>
+      function deleteComment() {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.ajax({
+           url: '/api/comments/'+ urlParams.get('id'),
+           type: 'DELETE',
+           async: false,
+           success: function(result) {
+                $(location).prop('href', '/comments?book_id=' + document.getElementById('comment-book-input').value);
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
 
     <div class="row" hidden>
         <label for="id-input">ID:</label>
@@ -45,7 +62,7 @@
     </div>
 
     <div class="row">
-        <button type="submit">Delete</button>
+        <button onclick="deleteComment()">Delete</button>
         <a href="commentList.html" th:href="@{/comments(book_id=${book_id})}">
             <button type="button">Cancel</button>
         </a>
@@ -54,7 +71,7 @@
     $(function () {
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
-        $.get('/api/comment?id='+ urlParams.get('id')).done(function (comment) {
+        $.get('/api/comments/'+ urlParams.get('id')).done(function (comment) {
                 val = document.getElementById('id-input');
                 val.value = comment.id
                 val = document.getElementById('comment-text-input');
@@ -67,7 +84,6 @@
     });
 
     </script>
-</form>
 
 </body>
 </html>
