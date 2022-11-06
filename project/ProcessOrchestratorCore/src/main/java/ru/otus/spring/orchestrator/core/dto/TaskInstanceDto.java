@@ -116,4 +116,12 @@ public class TaskInstanceDto {
     public void setResult(String result) {
         Result = result;
     }
+
+    public Long getTaskTypeId() {
+        return taskTypeId;
+    }
+
+    public void setTaskTypeId(Long taskTypeId) {
+        this.taskTypeId = taskTypeId;
+    }
 }

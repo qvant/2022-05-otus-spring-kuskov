@@ -92,7 +92,7 @@ public class TaskInstanceDto {
     }
 
     public void setStatus(Long status) {
-        Status = status;
+        this.Status = status;
     }
 
     public String getResult() {
@@ -100,6 +100,14 @@ public class TaskInstanceDto {
     }
 
     public void setResult(String result) {
-        Result = result;
+        this.Result = result;
+    }
+
+    public Long getTaskTypeId() {
+        return taskTypeId;
+    }
+
+    public void setTaskTypeId(Long taskTypeId) {
+        this.taskTypeId = taskTypeId;
     }
 }

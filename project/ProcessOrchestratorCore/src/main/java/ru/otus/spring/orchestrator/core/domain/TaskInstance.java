@@ -48,6 +48,7 @@ public class TaskInstance {
 
     public TaskInstance(Task task, String name, String code, Long taskTypeId, Instant scheduledTime, Instant queuedTime){
         this.task = task;
+        this.taskTypeId = task.getTaskType().getId();
         this.name = name;
         this.code = code;
         this.taskTypeId = taskTypeId;

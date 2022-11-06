@@ -20,8 +20,9 @@ import java.time.Instant;
 public class ListenerService {
     private static final String MAIN_EXCHANGE_NAME = "process_orchestrator-exchange";
     private static final String MAIN_QUEUE_NAME = "process_orchestrator-queue-tasks";
-    private static final Long STATUS_SUCCESS = 1L;
+
     private final RabbitTemplate rabbitTemplate;
+    private final TaskProcessService taskProcessService;
     //private final ObjectMapper objectMapper;
 
     //@Scheduled(initialDelay = 3000, fixedDelay = 3000)
@@ -34,11 +35,8 @@ public class ListenerService {
         objectMapper.findAndRegisterModules();
         TaskInstanceDto taskInstance = objectMapper.readValue(message, TaskInstanceDto.class);
         taskInstance.setStartedTime(Instant.now());
-        // TODO: do something
+        taskProcessService.processTask(taskInstance);
         val routingKey = "task-results";
-        taskInstance.setFinishedTime(Instant.now());
-        taskInstance.setStatus(STATUS_SUCCESS);
-        taskInstance.setResult("");
         rabbitTemplate.convertAndSend(MAIN_EXCHANGE_NAME, routingKey, objectMapper.writeValueAsString(taskInstance));
         log.warn("Message " + message + " proceed, response sent");
 

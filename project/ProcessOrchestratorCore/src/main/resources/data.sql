@@ -1,6 +1,11 @@
 insert into schedules(id, name, seconds) values (-1, 'every minute', 60);
-insert into task_types(id, name) values (1, 'Oracle');
-insert into task_types(id, name) values (2, 'Postgresql');
-insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-1, 'Test', 'select nul from dual', '2022-10-01',  -1, 1 );
+insert into schedules(id, name, seconds) values (-2, 'every hour', 3600);
+insert into task_types(id, name) values (1, 'Oracle SQL');
+insert into task_types(id, name) values (2, 'Oracle stored procedure');
+insert into task_types(id, name) values (3, 'Postgresql');
+insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-1, 'Test', 'select null from dual', '2022-10-01',  -1, 1 );
 insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-2, 'Future task', 'select nul from dual', '2500-01-01',  -1, 1);
+insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-3, 'Start EOD task', 'pck_switch_eod.switch_eod', '2022-01-01',  -1, 2);
+insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-4, 'Oracle SQL always fall', 'select 1/0 from dual', '2022-10-01',  -2, 1 );
+insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-5, 'Oracle stored procedure always fall', 'select 1/0 from dual', '2022-10-01',  -2, 2 );
 commit;
