@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
     private static final String MAIN_EXCHANGE_NAME = "process_orchestrator-exchange";
-    private static final String MAIN_QUEUE_NAME = "process_orchestrator-queue";
+    private static final String MAIN_QUEUE_NAME = "process_orchestrator-queue-tasks";
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {

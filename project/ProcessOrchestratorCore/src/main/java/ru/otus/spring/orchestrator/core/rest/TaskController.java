@@ -5,15 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.otus.spring.orchestrator.core.dto.TaskDto;
 import ru.otus.spring.orchestrator.core.service.TaskService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
 @Slf4j
 @RequiredArgsConstructor
+@RestController
 public class TaskController {
     private final TaskService taskService;
     @GetMapping("/api/tasks")

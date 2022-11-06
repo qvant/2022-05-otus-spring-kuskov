@@ -25,10 +25,8 @@ public class SchedulerService {
     private final TaskRepository taskRepository;
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
+    private final TaskService taskService;
     @Scheduled(initialDelay = 1000, fixedRate = 3000)
-    // rework!!!! has to be separate service
-    @Transactional
-    //@Bean
     public void run() {
         log.info("Scheduled run");
         System.out.println("AAAA");
@@ -42,10 +40,7 @@ public class SchedulerService {
              ) {
             if (task.getNextRun().isBefore(runStart))
             {
-                task.setNextRun(task.getSchedule().calcNextDate(runStart));
-                taskRepository.save(task);
-                val routingKey = "tasks";
-                rabbitTemplate.convertAndSend(MAIN_EXCHANGE_NAME, routingKey, objectMapper.writeValueAsString(TaskDto.toDto(task)));
+                taskService.scheduleRun(task.getId(), runStart);
                 log.warn("Task " + task.getName() + " scheduled");
             }
             else

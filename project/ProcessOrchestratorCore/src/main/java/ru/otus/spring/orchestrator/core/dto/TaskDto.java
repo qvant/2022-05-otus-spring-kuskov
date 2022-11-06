@@ -8,15 +8,17 @@ public class TaskDto {
     private String name;
     private String code;
     private Instant nextRun;
+    private TaskTypeDto taskType;
 
-    public TaskDto(String name, String code, Instant nextRun) {
+    public TaskDto(String name, String code, Instant nextRun, TaskTypeDto taskType) {
         this.name = name;
         this.code = code;
         this.nextRun = nextRun;
+        this.taskType = taskType;
     }
 
     public static TaskDto toDto(Task task){
-        return new TaskDto((task.getName()), task.getTaskCode(), task.getNextRun());
+        return new TaskDto((task.getName()), task.getTaskCode(), task.getNextRun(), TaskTypeDto.toDto(task.getTaskType()));
     }
 
     public String getName() {
@@ -41,5 +43,13 @@ public class TaskDto {
 
     public void setNextRun(Instant nextRun) {
         this.nextRun = nextRun;
+    }
+
+    public TaskTypeDto getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskTypeDto taskType) {
+        this.taskType = taskType;
     }
 }

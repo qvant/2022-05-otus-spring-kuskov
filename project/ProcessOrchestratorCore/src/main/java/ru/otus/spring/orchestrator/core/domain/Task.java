@@ -17,6 +17,10 @@ public class Task {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_type_id")
+    private TaskType taskType;
+
     public String getName() {
         return name;
     }
@@ -61,5 +65,21 @@ public class Task {
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
+    }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
