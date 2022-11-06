@@ -22,11 +22,30 @@
         }
 
     </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
-<form id="new-form" action="/api/authorEdit" method="post">
     <h3>Author Info:</h3>
+
+    <script>
+      function postAuthor() {
+        var data = {"name": document.getElementById('author-name-input').value};
+        $.ajax({
+           url: '/api/authors/',
+           type: 'POST',
+           async: false,
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           done: function(result) {
+                $(location).prop('href', '/authors');
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
 
     <div class="row">
         <label for="author-name-input">Name:</label>
@@ -34,12 +53,13 @@
     </div>
 
     <div class="row">
-        <button type="submit">Save</button>
+        <a href="authors">
+            <button onclick="postAuthor()">Save</button>
+        </a>
         <a href="authors">
             <button type="button">Cancel</button>
         </a>
     </div>
-</form>
 
 </body>
 </html>

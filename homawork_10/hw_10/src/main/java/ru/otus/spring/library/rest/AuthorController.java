@@ -1,10 +1,7 @@
 package ru.otus.spring.library.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.*;
 import ru.otus.spring.library.domain.Author;
 import ru.otus.spring.library.dto.AuthorDto;
 import ru.otus.spring.library.service.AuthorService;
@@ -23,26 +20,26 @@ public class AuthorController {
         return authorService.findAll().stream().map(AuthorDto::toDto).collect(Collectors.toList());
     }
 
-    @GetMapping("api/author")
-    public Optional<AuthorDto> getAuthor(Long id) {
+    @GetMapping("api/authors/{id}")
+    public Optional<AuthorDto> getAuthor(@PathVariable("id") Long id) {
         return authorService.findById(id).map(AuthorDto::toDto);
     }
 
-    @PostMapping("api/authorEdit")
-    public RedirectView saveAuthor(AuthorDto authorDto) {
+    @PostMapping("api/authors")
+    public void saveAuthor(@RequestBody AuthorDto authorDto) {
         Author author = authorDto.toDomain();
-        if (author.getId() == null) {
-            authorService.addAuthor(author.getName());
-        } else {
-            authorService.updateAuthor(author.getId(), author.getName());
-        }
-        return new RedirectView("/authors");
+        authorService.addAuthor(author.getName());
     }
 
-    @PostMapping("api/authorDelete")
-    public RedirectView deleteAuthor(Long id) {
+    @PutMapping({"api/authors", "api/authors/{id}"})
+    public void editAuthor(@RequestBody AuthorDto authorDto) {
+        Author author = authorDto.toDomain();
+        authorService.updateAuthor(author.getId(), author.getName());
+    }
+
+    @DeleteMapping("api/authors/{id}")
+    public void deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);
-        return new RedirectView("/authors");
     }
 
 

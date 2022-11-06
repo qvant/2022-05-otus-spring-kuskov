@@ -26,18 +26,36 @@
     <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-
-<form action="authorEdit.html" id="edit-form">
     <h3>Author Info:</h3>
 
+    <script>
+      function putAuthor() {
+
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var data = {"id": document.getElementById('id-input').value, "name": document.getElementById('author-name-input').value};
+        $.ajax({
+           url: '/api/authors/'+ urlParams.get('id'),
+           type: 'PUT',
+           async: false,
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/authors')
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
 
     <script>
     $(function () {
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
-        $.get('/api/author?id='+ urlParams.get('id')).done(function (author) {
-                $('form').append(`
-                <form action="/api/authorEdit" id="edit-form" method="post">
+        $.get('/api/authors/'+ urlParams.get('id')).done(function (author) {
+                $('body').append(`
                     <div class="row" hidden>
                         <label for="id-input">ID:</label>
                         <input id="id-input" name="id" value="${author.id}" type="text" required/>
@@ -47,20 +65,17 @@
                         <input id="author-name-input" name="name" value="${author.name}" type="text" required/>
                     </div>
                     <div class="row">
-                        <button type="submit"/>Save</button>
+                        <button onclick="putAuthor()"/>Save</button>
                         <a href="/authors">
                             <button type="button">Cancel</button>
                         </a>
                     </div>
-                </form>
                 `)
         })
 
     });
 
     </script>
-
-</form>
 
 </body>
 </html>
