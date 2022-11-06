@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Delete genre</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <h3>Genre Info:</h3>
+
+    <script>
+      function deleteGenre() {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.ajax({
+           url: '/api/genres/'+ urlParams.get('id'),
+           type: 'DELETE',
+           success: function(result) {
+                $(location).prop('href', '/genres')
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.get('/api/genres/'+ urlParams.get('id')).done(function (genre) {
+                $('body').append(`
+                    <div class="row" hidden>
+                        <label for="id-input">ID:</label>
+                        <input id="id-input" name="id" value="${genre.id}" type="text" required/>
+                    </div>
+                    <div class="row">
+                        <label for="author-name-input">Name:</label>
+                        <input id="author-name-input" value="${genre.name}" type="text" readonly/>
+                    </div>
+                    <div class="row">
+                        <button onclick="deleteGenre()"/>Delete</button>
+                        <a href="/genres">
+                            <button type="button">Cancel</button>
+                        </a>
+                    </div>
+                `)
+        })
+
+    });
+
+    </script>
+
+</body>
+</html>
