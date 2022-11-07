@@ -28,19 +28,16 @@ public class SchedulerService {
     private final TaskService taskService;
     @Scheduled(initialDelay = 1000, fixedRate = 3000)
     public void run() {
-        log.info("Scheduled run");
-        System.out.println("AAAA");
         try {
 
 
         Instant runStart = Instant.now();
-        var tasks = taskRepository.findAll();
-        System.out.println(tasks.size());
+        var tasks = taskRepository.findByNextRunIsNotNull();
         for (Task task: tasks
              ) {
-            if (task.getNextRun().isBefore(runStart))
+            if ( task.getNextRun().isBefore(runStart))
             {
-                taskService.scheduleRun(task.getId(), runStart);
+                taskService.scheduleRun(task.getId(), runStart, null);
                 log.warn("Task " + task.getName() + " scheduled");
             }
             else

@@ -24,7 +24,10 @@ public class TaskProcessService {
     public TaskInstanceDto processTask(TaskInstanceDto taskInstanceDto){
         if (taskInstanceDto.getTaskTypeId() == TASK_TYPE_ORACLE_SQL){
             try {
-                return oracleService.processSqlTask(taskInstanceDto);
+                var res = oracleService.processSqlTask(taskInstanceDto);
+                res.setStatus(STATUS_SUCCESS);
+                res.setResult("");
+                return res;
             }
             catch (Exception exception){
                 log.error(exception.getMessage());
@@ -35,7 +38,10 @@ public class TaskProcessService {
         }
         if (taskInstanceDto.getTaskTypeId() == TASK_TYPE_ORACLE_STORED_PROCEDURE){
             try {
-                return oracleService.processProcedureTask(taskInstanceDto);
+                var res = oracleService.processProcedureTask(taskInstanceDto);
+                res.setStatus(STATUS_SUCCESS);
+                res.setResult("");
+                return res;
             }
             catch (Exception exception){
                 log.error(exception.getMessage());

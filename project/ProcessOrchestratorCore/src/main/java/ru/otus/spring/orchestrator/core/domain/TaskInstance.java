@@ -10,7 +10,8 @@ public class TaskInstance {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "s_TASKS_INSTANCES")
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    //TODO: Must be lazu
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     private Task task;
     // Fields from Task, because Task, despite doesn't having history, is mutable. TaskInstance, by definition, are not.
@@ -29,6 +30,10 @@ public class TaskInstance {
 
     private Long status;
     private String result;
+
+    @Column(name = "root_task_instance_id")
+    private Long rootTaskInstanceId;
+
 
     public TaskInstance() {
     }
@@ -138,5 +143,13 @@ public class TaskInstance {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public Long getRootTaskInstanceId() {
+        return rootTaskInstanceId;
+    }
+
+    public void setRootTaskInstanceId(Long rootTaskInstanceId) {
+        this.rootTaskInstanceId = rootTaskInstanceId;
     }
 }

@@ -54,10 +54,13 @@ public class TaskService {
 
     @Transactional
     @SneakyThrows
-    public void scheduleRun(Long id, Instant runStart){
+    public void scheduleRun(Long id, Instant runStart, Long rootTaskInstanceId){
         Task task = taskRepository.findById(id).orElseThrow(RuntimeException::new);
-        task.setNextRun(task.getSchedule().calcNextDate(runStart));
+        if (task.getSchedule() != null) {
+            task.setNextRun(task.getSchedule().calcNextDate(runStart));
+        }
         TaskInstance taskInstance = new TaskInstance(task, task.getName(), task.getTaskCode(), task.getTaskType().getId(), runStart, Instant.now());
+        taskInstance.setRootTaskInstanceId(rootTaskInstanceId);
         taskInstanceRepository.save(taskInstance);
         taskRepository.save(task);
         val routingKey = "tasks";

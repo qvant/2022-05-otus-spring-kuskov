@@ -18,6 +18,8 @@ public class TaskInstanceDto {
     private Long Status;
     private String Result;
 
+    private Long rootTaskInstanceId;
+
 
     public TaskInstanceDto(Long id, TaskDto task, String name, String code, Long taskTypeId, Instant scheduledTime, Instant startedTime, Instant queuedTime, Instant finishedTime, Long status, String result) {
         this.id = id;
@@ -123,5 +125,13 @@ public class TaskInstanceDto {
 
     public void setTaskTypeId(Long taskTypeId) {
         this.taskTypeId = taskTypeId;
+    }
+
+    public Long getRootTaskInstanceId() {
+        return rootTaskInstanceId;
+    }
+
+    public void setRootTaskInstanceId(Long rootTaskInstanceId) {
+        this.rootTaskInstanceId = rootTaskInstanceId;
     }
 }

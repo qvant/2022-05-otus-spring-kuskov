@@ -13,11 +13,12 @@ public class Task {
     private String code;
     @Column(name = "next_run")
     private Instant nextRun;
-    @ManyToOne(fetch = FetchType.LAZY)
+    //TODO: must be lazy
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_type_id")
     private TaskType taskType;
 
