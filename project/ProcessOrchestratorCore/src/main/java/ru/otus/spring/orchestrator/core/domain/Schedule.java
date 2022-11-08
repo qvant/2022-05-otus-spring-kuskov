@@ -13,6 +13,19 @@ public class Schedule {
     private String name;
     private Long seconds;
 
+    public Schedule() {}
+
+    public Schedule(Long id, String name, Long seconds) {
+        this.id = id;
+        this.name = name;
+        this.seconds = seconds;
+    }
+
+    public Schedule(String name, Long seconds) {
+        this.name = name;
+        this.seconds = seconds;
+    }
+
     public Instant calcNextDate(Instant previousRun){
         return previousRun.plusSeconds(+ seconds );
     }

@@ -3,12 +3,9 @@ package ru.otus.spring.orchestrator.core.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.orchestrator.core.dto.TaskDto;
 import ru.otus.spring.orchestrator.core.domain.Task;
 import ru.otus.spring.orchestrator.core.repository.TaskRepository;
 
@@ -19,7 +16,7 @@ import java.time.Instant;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SchedulerService {
+public class SchedulerCoreService {
     private static final String MAIN_EXCHANGE_NAME = "process_orchestrator-exchange";
     private static final String MAIN_QUEUE_NAME = "process_orchestrator-queue";
     private final TaskRepository taskRepository;

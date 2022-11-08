@@ -11,6 +11,12 @@ public class TaskType {
     private Long id;
     private String name;
 
+    public TaskType(){};
+    public TaskType(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

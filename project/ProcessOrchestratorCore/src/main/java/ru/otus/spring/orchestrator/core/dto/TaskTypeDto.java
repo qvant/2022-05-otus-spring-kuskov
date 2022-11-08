@@ -15,6 +15,10 @@ public class TaskTypeDto {
         return new TaskTypeDto(taskType.getId(), taskType.getName());
     }
 
+    public TaskType toDomain(){
+        return new TaskType(this.id, this.name);
+    }
+
     public Long getId() {
         return id;
     }

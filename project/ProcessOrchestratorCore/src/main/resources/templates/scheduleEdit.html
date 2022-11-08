@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit schedule</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h3>Schedule Info:</h3>
+
+    <script>
+      function putSchedule() {
+
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var data = {"id": document.getElementById('id-input').value,
+                    "name": document.getElementById('schedule-name-input').value,
+                    "seconds": document.getElementById('schedule-seconds-input').value
+                    };
+        $.ajax({
+           url: '/api/schedules/'+ urlParams.get('id'),
+           type: 'PUT',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/schedules')
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.get('/api/schedules/'+ urlParams.get('id')).done(function (schedule) {
+                $('body').append(`
+                    <div class="row" hidden>
+                        <label for="id-input">ID:</label>
+                        <input id="id-input" name="id" value="${schedule.id}" type="text" required/>
+                    </div>
+                    <div class="row">
+                        <label for="schedule-name-input">Name:</label>
+                        <input id="schedule-name-input" name="name" value="${schedule.name}" type="text" required/>
+                    </div>
+                    <div class="row">
+                        <label for="schedule-seconds-input">Seconds:</label>
+                        <input id="schedule-seconds-input" name="seconds" type="number" value="60" required/>
+                    </div>
+                    <div class="row">
+                        <button onclick="putSchedule()"/>Save</button>
+                        <a href="/schedules">
+                            <button type="button">Cancel</button>
+                        </a>
+                    </div>
+                `)
+        })
+
+    });
+
+    </script>
+
+</body>
+</html>

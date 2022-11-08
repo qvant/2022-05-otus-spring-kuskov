@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.orchestrator.core.domain.Schedule;
 import ru.otus.spring.orchestrator.core.domain.Task;
 import ru.otus.spring.orchestrator.core.domain.TaskInstance;
+import ru.otus.spring.orchestrator.core.domain.TaskType;
 import ru.otus.spring.orchestrator.core.dto.TaskDto;
 import ru.otus.spring.orchestrator.core.dto.TaskInstanceDto;
 import ru.otus.spring.orchestrator.core.repository.TaskInstanceRepository;
@@ -66,5 +67,27 @@ public class TaskService {
         val routingKey = "tasks";
         rabbitTemplate.convertAndSend(MAIN_EXCHANGE_NAME, routingKey, objectMapper.writeValueAsString(TaskInstanceDto.toDto(taskInstance)));
         log.warn("Task " + task.getName() + " scheduled");
+    }
+
+    @Transactional
+    public void createTask(String name, String code, Instant nextRun, Schedule schedule, TaskType taskType){
+        Task task = new Task(name, code, nextRun, schedule, taskType);
+        taskRepository.save(task);
+    }
+
+    @Transactional
+    public void editTask(Long id, String name, String code, Instant nextRun, Schedule schedule, TaskType taskType){
+        Task task =  taskRepository.findById(id).orElseThrow(RuntimeException::new);
+        task.setName(name);
+        task.setTaskCode(code);
+        task.setNextRun(nextRun);
+        task.setSchedule(schedule);
+        task.setTaskType(taskType);
+        taskRepository.save(task);
+    }
+
+    @Transactional
+    public void deleteTask(Long id){
+        taskRepository.deleteById(id);
     }
 }

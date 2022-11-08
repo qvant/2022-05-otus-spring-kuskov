@@ -22,6 +22,15 @@ public class Task {
     @JoinColumn(name = "task_type_id")
     private TaskType taskType;
 
+    public Task(){}
+    public Task(String name, String code, Instant nextRun, Schedule schedule, TaskType taskType) {
+        this.name = name;
+        this.code = code;
+        this.nextRun = nextRun;
+        this.schedule = schedule;
+        this.taskType = taskType;
+    }
+
     public String getName() {
         return name;
     }
@@ -61,6 +70,9 @@ public class Task {
     }
 
     public Schedule getSchedule() {
+        if (schedule==null){
+            return new Schedule();
+        }
         return schedule;
     }
 
