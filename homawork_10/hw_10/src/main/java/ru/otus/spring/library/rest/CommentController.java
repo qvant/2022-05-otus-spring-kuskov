@@ -37,7 +37,6 @@ public class CommentController {
 
     @DeleteMapping("api/comments/{id}")
     public void deleteComment(@PathVariable Long id) {
-        long bookId = commentService.findById(id).orElseThrow(IncorrectReferenceException::new).getBook().getId();
         commentService.deleteComment(id);
     }
 }
