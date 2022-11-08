@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create task</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <h3>Task Info:</h3>
+
+    <script>
+      function postTask() {
+        var data = {"name": document.getElementById('task-name-input').value,
+                    "code": document.getElementById('task-code-input').value,
+                    "schedule": {
+                                    "id": document.getElementById('task-schedule-input').value,
+                                    "name": document.getElementById('task-schedule-input').text
+                                },
+                    "taskType": {
+                                    "id": document.getElementById('task-task-type-input').value,
+                                    "name": document.getElementById('task-task-type-input').text
+                                }
+                    };
+        if (!data["name"]) {
+            alert( 'Name must be specified!' );
+            return;
+        }
+        if (!data["taskType"]) {
+            alert( 'Task type must be specified!' );
+            return;
+        }
+        $.ajax({
+           url: '/api/tasks/',
+           type: 'POST',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/tasks');
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+
+    <div class="row">
+        <label for="task-name-input">Name:</label>
+        <input id="task-name-input" name="name" type="text" value="Some task" required/>
+    </div>
+
+    <div class="row">
+        <label for="task-code-input">Code:</label>
+        <input id="task-code-input" name="code" type="text" value="select * from dual" required/>
+    </div>
+
+    <div class="row">
+        <label for="task-next_run-input">Next run date:</label>
+        <input id="task-next_run-input" name="next_run" type="datetime-local" value="2022-12-01T03:00" required/>
+    </div>
+
+    <div class="row">
+        <label for="task-schedule-input">Schedule:</label>
+        <select id="task-schedule-input" name="schedule"></select>
+    </div>
+    <div class="row">
+        <label for="task-task-type-input">Type:</label>
+        <select id="task-task-type-input" name="taskType"></select>
+    </div>
+
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+
+        $.get('/api/schedules').done(function (schedules) {
+            select = document.getElementById('task-schedule-input');
+            schedules.forEach(function (schedule) {
+                var option = document.createElement('option');
+                option.value = schedule.id
+                option.text = schedule.name
+                select.appendChild(option)
+            });
+        })
+        $.get('/api/taskTypes').done(function (taskTypes) {
+            select = document.getElementById('task-task-type-input');
+            taskTypes.forEach(function (taskType) {
+                var option = document.createElement('option');
+                option.value = taskType.id
+                option.text = taskType.name
+                select.appendChild(option)
+            });
+        })
+    });
+
+    </script>
+
+    <div class="row">
+        <button onclick="postTask()">Save</button>
+        <a href="tasks">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+
+</body>
+</html>
