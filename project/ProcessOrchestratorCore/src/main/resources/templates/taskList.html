@@ -39,6 +39,7 @@
         <th>Name</th>
         <th>Code</th>
         <th>Next Run</th>
+        <th>Schedule</th>
         <th>Type</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -57,6 +58,7 @@
                         <td>${task.name}</td>
                         <td>${task.code}</td>
                         <td>${task.nextRun}</td>
+                        <td>${task.schedule.name}</td>
                         <td>${task.taskType.name}</td>
                         <td>
                             <a href="/taskEdit?id=${task.id}">Edit</a>
