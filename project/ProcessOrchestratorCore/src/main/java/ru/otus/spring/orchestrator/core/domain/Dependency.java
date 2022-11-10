@@ -11,7 +11,7 @@ public class Dependency {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "dependency_type", nullable = false)
+    @Column(name = "dependency_type_id", nullable = false)
     private Long type;
     //TODO: must be eager
     @ManyToOne(fetch = FetchType.EAGER)
@@ -20,6 +20,13 @@ public class Dependency {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     private Task task;
+
+    public Dependency(){};
+    public Dependency(Long type, Task taskParent, Task task) {
+        this.type = type;
+        this.taskParent = taskParent;
+        this.task = task;
+    }
 
     public Task getTask() {
         return task;

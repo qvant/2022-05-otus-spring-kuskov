@@ -27,6 +27,42 @@ public class DependencyService {
     private final static  Long TASK_STATUS_SUCCESS = 1L;
     private final static  Long TASK_STATUS_FAILURE = 2L;
     private final TaskRepository taskRepository;
+
+    public List<Dependency> findAll(){
+        return dependencyRepository.findAll();
+    }
+    public Dependency findById(Long id){
+        return dependencyRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+    public void createDependency(Long taskId, Long taskParentId, Long dependencyType){
+        if (taskId.equals(taskParentId)){
+            throw new RuntimeException("Task can't depend on themself");
+        }
+        Task task = taskRepository.findById(taskId).orElseThrow(RuntimeException::new);
+        Task taskParent = taskRepository.findById(taskParentId).orElseThrow(RuntimeException::new);
+        Dependency dependency = new Dependency(dependencyType, taskParent, task);
+        dependencyRepository.save(dependency);
+    }
+
+    public void editDependency(Long id, Long taskId, Long taskParentId, Long dependencyType){
+        if (taskId.equals(taskParentId)){
+            throw new RuntimeException("Task can't depend on themself");
+        }
+        Task task = taskRepository.findById(taskId).orElseThrow(RuntimeException::new);
+        Task taskParent = taskRepository.findById(taskParentId).orElseThrow(RuntimeException::new);
+        Dependency dependency = dependencyRepository.findById(id).orElseThrow(RuntimeException::new);
+        dependency.setTask(task);
+        dependency.setTaskParent(taskParent);
+        dependency.setType(dependencyType);
+        dependencyRepository.save(dependency);
+    }
+
+    @Transactional
+    public void deleteDependency(Long id){
+        dependencyRepository.deleteById(id);
+    }
+
     public List<Task> getReadyDependencies(Long taskId, Long taskStatus, Long rootTaskInstanceId)
     {
         Task initTask = taskRepository.getById(taskId);

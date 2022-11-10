@@ -1,4 +1,5 @@
 drop table if exists SCHEDULES CASCADE;
+drop table if exists DEPENDENCY_TYPES CASCADE;
 drop table if exists DEPENDENCIES CASCADE;
 drop table if exists TASK_TYPES CASCADE;
 drop table if exists TASKS CASCADE;
@@ -20,7 +21,9 @@ queued_time timestamp, finished_time timestamp, status bigint, result text, root
 alter table TASKS add constraint FK_TASKS_SCHEDULES foreign key (schedule_id) references SCHEDULES;
 alter table TASKS add constraint FK_TASKS_TASKS_TYPES foreign key (task_type_id) references TASK_TYPES;
 alter table TASKS_INSTANCES add constraint FK_TASK_INSTANCES_TASKS foreign key (task_id) references TASKS;
-create table DEPENDENCIES (id bigint not null, dependency_type bigint not null, task_parent_id bigint, task_id bigint, primary key (id));
+create table DEPENDENCY_TYPES (id bigint not null, name varchar(255), primary key (id));
+create table DEPENDENCIES (id bigint not null, dependency_type_id bigint not null, task_parent_id bigint, task_id bigint, primary key (id));
 alter table DEPENDENCIES add constraint FK_DEPENDENCIES_TASK foreign key (task_parent_id) references TASKS;
 alter table DEPENDENCIES add constraint FK_DEPENDENCIES_PARENT_TASK foreign key (task_id) references TASKS;
+alter table DEPENDENCIES add constraint FK_DEPENDENCIES_DEPENDENCY_TYPES foreign key (dependency_type_id) references DEPENDENCY_TYPES;
 commit;
