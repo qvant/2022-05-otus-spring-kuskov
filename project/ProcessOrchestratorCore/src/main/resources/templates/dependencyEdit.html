@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Create dependency</title>
+    <title>Edit dependency</title>
     <style type="text/css">
         body {
             padding: 50px;
@@ -30,7 +30,10 @@
 
     <script>
       function postTask() {
-        var data = {"type": document.getElementById('dependency-type-input').value,
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var data = {"id": urlParams.get('id'),
+                    "type": document.getElementById('dependency-type-input').value,
                     "taskId": document.getElementById('dependency-task-input').value,
                     "taskParentId": document.getElementById('dependency-task-parent-input').value
                     };
@@ -52,7 +55,7 @@
         }
         $.ajax({
            url: '/api/dependencies/',
-           type: 'POST',
+           type: 'PUT',
            contentType: 'application/json',
            data: JSON.stringify(data),
            success: function(result) {
@@ -87,28 +90,43 @@
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
 
-        $.get('/api/tasks').done(function (tasks) {
-            select = document.getElementById('dependency-task-input');
-            selectParent = document.getElementById('dependency-task-parent-input');
-            tasks.forEach(function (task) {
-                var option = document.createElement('option');
-                option.value = task.id
-                option.text = task.name
-                select.appendChild(option)
-                var optionParent = document.createElement('option');
-                optionParent.value = task.id
-                optionParent.text = task.name
-                selectParent.appendChild(optionParent)
-            });
-        })
-        $.get('/api/dependencyTypes').done(function (dependencyTypes) {
-            select = document.getElementById('dependency-type-input');
-            dependencyTypes.forEach(function (dependencyType) {
-                var option = document.createElement('option');
-                option.value = dependencyType.id
-                option.text = dependencyType.name
-                select.appendChild(option)
-            });
+        $.get('/api/dependencies/' + urlParams.get('id')).done(function (dependency) {
+
+            $.get('/api/tasks').done(function (tasks) {
+                select = document.getElementById('dependency-task-input');
+                selectParent = document.getElementById('dependency-task-parent-input');
+                tasks.forEach(function (task) {
+                    var option = document.createElement('option');
+                    option.value = task.id
+                    option.text = task.name
+                    if (task.id == dependency.taskId){
+                        select.value = task.id
+                        option.selected = 'selected'
+                    }
+                    select.appendChild(option)
+                    var optionParent = document.createElement('option');
+                    optionParent.value = task.id
+                    optionParent.text = task.name
+                    if (task.id == dependency.taskParentId){
+                        select.value = task.id
+                        option.selected = 'selected'
+                    }
+                    selectParent.appendChild(optionParent)
+                });
+            })
+            $.get('/api/dependencyTypes').done(function (dependencyTypes) {
+                select = document.getElementById('dependency-type-input');
+                dependencyTypes.forEach(function (dependencyType) {
+                    var option = document.createElement('option');
+                    option.value = dependencyType.id
+                    option.text = dependencyType.name
+                    if (dependencyType.id == dependency.type){
+                        select.value = dependencyType.id
+                        option.selected = 'selected'
+                    }
+                    select.appendChild(option)
+                });
+            })
         })
     });
 

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Delete dependency</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <h3>Dependency Info:</h3>
+
+    <script>
+      function postTask() {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.ajax({
+           url: '/api/dependencies/' + urlParams.get('id'),
+           type: 'DELETE',
+           success: function(result) {
+                $(location).prop('href', '/dependencies');
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+
+
+    <div class="row">
+        <label for="dependency-type-input">Type:</label>
+        <input id="dependency-type-input" name="dependencyType" readonly></input>
+    </div>
+
+
+    <div class="row">
+        <label for="dependency-task-input">Task:</label>
+        <input id="dependency-task-input" name="dependencyTask" readonly></input>
+    </div>
+
+    <div class="row">
+        <label for="dependency-task-parent-input">Parent:</label>
+        <input id="dependency-task-parent-input" name="dependencyTaskParent" readonly></input>
+    </div>
+
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+
+        $.get('/api/dependencies/' + urlParams.get('id')).done(function (dependency) {
+
+            select = document.getElementById('dependency-task-input');
+            select.value = dependency.taskName;
+            selectParent = document.getElementById('dependency-task-parent-input');
+            selectParent.value = dependency.taskParentName;
+            select = document.getElementById('dependency-type-input');
+            select.value = dependency.typeName;
+        })
+    });
+
+    </script>
+
+    <div class="row">
+        <button onclick="postTask()">Delete</button>
+        <a href="dependencies">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+
+</body>
+</html>
