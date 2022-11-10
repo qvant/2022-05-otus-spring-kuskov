@@ -6,13 +6,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.orchestrator.core.domain.Schedule;
 import ru.otus.spring.orchestrator.core.domain.Task;
 import ru.otus.spring.orchestrator.core.domain.TaskInstance;
 import ru.otus.spring.orchestrator.core.domain.TaskType;
-import ru.otus.spring.orchestrator.core.dto.TaskDto;
 import ru.otus.spring.orchestrator.core.dto.TaskInstanceDto;
 import ru.otus.spring.orchestrator.core.repository.TaskInstanceRepository;
 import ru.otus.spring.orchestrator.core.repository.TaskRepository;
@@ -33,6 +33,15 @@ public class TaskService {
 
     public List<Task> findAll(){
         return taskRepository.findAll();
+    }
+    public List<Task> findAllOrderedById(){
+        Sort sort = Sort.by("id").ascending();
+        return taskRepository.findAll(sort);
+    }
+
+    public List<Task> findAllOrderedByName(){
+        Sort sort = Sort.by("name").ascending();
+        return taskRepository.findAll(sort);
     }
 
     public Task findById(Long id){

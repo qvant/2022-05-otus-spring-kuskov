@@ -87,7 +87,7 @@
         var queryString = window.location.search;
         var urlParams = new URLSearchParams(queryString);
 
-        $.get('/api/tasks').done(function (tasks) {
+        $.get('/api/tasks?sort=2').done(function (tasks) {
             select = document.getElementById('dependency-task-input');
             selectParent = document.getElementById('dependency-task-parent-input');
             tasks.forEach(function (task) {
