@@ -75,6 +75,30 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${project.parent.version}</version>
 			</plugin>
+
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<to>
+						<image>library-image</image>
+						<tags>
+							<tag>0.0.1</tag>
+							<tag>latest</tag>
+						</tags>
+					</to>
+					<from>
+						<image>bellsoft/liberica-openjdk-alpine-musl:19.0.1-11</image>
+					</from>
+					<container>
+						<mainClass>ru.otus.spring.library.LibraryApplication</mainClass>
+						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+						<ports>8080</ports>
+					</container>
+				</configuration>
+			</plugin>
+
 		</plugins>
 
 	</build>
