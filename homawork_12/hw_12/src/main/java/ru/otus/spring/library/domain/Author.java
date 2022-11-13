@@ -8,14 +8,14 @@ import javax.persistence.*;
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_AUTHORS")
-    private Long id;
+    private long id;
     private String name;
 
     public Author() {
 
     }
 
-    public Author(Long id, String name) {
+    public Author(long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -33,11 +33,11 @@ public class Author {
         this.name = name;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 }

@@ -8,14 +8,14 @@ import javax.persistence.*;
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "S_GENRES")
-    private Long id;
+    private long id;
     private String name;
 
     public Genre() {
 
     }
 
-    public Genre(Long id, String name) {
+    public Genre(long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -24,11 +24,11 @@ public class Genre {
         this.name = name;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

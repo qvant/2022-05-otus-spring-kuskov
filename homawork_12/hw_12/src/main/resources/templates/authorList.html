@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>List of all authors</title>
@@ -23,15 +23,12 @@
             width: 50px;
         }
 
-
-
     </style>
-    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<a href="/">Back to root</a>
+<a href="root.html" th:href="@{/}">Back to root</a>
 <br>
-<a href="/authorCreate">Create new author</a>
+<a href="authorNew.html" th:href="@{/authorCreate}">Create new author</a>
 <table class="authors">
     <thead>
     <tr>
@@ -42,30 +39,20 @@
     </tr>
     </thead>
     <tbody>
+    <tr th:each="author : ${authors}">
+        <td hidden th:text="${author.id}">1</td>
+        <td th:text="${author.name}">Pulp fiction</td>
+        <td>
+            <a href="authorEdit.html" th:href="@{/authorEdit(id=${author.id})}">Edit</a>
+        </td>
+        <td>
+            <a href="authorDelete.html" th:href="@{/authorDelete(id=${author.id})}">Delete</a>
+        </td>
+    </tr>
     </tbody>
 </table>
-<script>
-    $(function () {
-        $.get('/api/authors').done(function (authors) {
-            authors.forEach(function (author) {
-                $('tbody').append(`
-                    <tr>
-                        <td>${author.id}</td>
-                        <td>${author.name}</td>
-                        <td>
-                            <a href="/authorEdit?id=${author.id}">Edit</a>
-                        </td>
-                        <td>
-                            <a href="/authorDelete?id=${author.id}">Delete</a>
-                        </td>
-                    </tr>
-                `)
-            });
-        })
-    });
-</script>
-<a href="/authorCreate">Create new author</a>
+<a href="authorNew.html" th:href="@{/authorCreate}">Create new author</a>
 <br>
-<a href="/">Back to root</a>
+<a href="root.html" th:href="@{/}">Back to root</a>
 </body>
 </html>

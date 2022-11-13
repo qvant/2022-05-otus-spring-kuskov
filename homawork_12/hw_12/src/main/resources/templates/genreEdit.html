@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Edit genre</title>
@@ -22,60 +22,30 @@
         }
 
     </style>
-    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
+<form action="genreEdit.html" id="edit-form" th:action="@{/genreEdit(id=${genre.id})}" th:method="post"
+      th:object="${genre}">
     <h3>Genre Info:</h3>
 
-    <script>
-      function putGenre() {
+    <div class="row" hidden>
+        <label for="id-input">ID:</label>
+        <input id="id-input" readonly="readonly" th:value="*{id}" type="text" value="1"/>
+    </div>
 
-        var queryString = window.location.search;
-        var urlParams = new URLSearchParams(queryString);
-        var data = {"id": document.getElementById('id-input').value, "name": document.getElementById('genre-name-input').value};
-        $.ajax({
-           url: '/api/genres/'+ urlParams.get('id'),
-           type: 'PUT',
-           contentType: 'application/json',
-           data: JSON.stringify(data),
-           success: function(result) {
-                $(location).prop('href', '/genres')
-            },
-            error: function(result) {
-                console.log(result);
-                },
-        });
-      }
-    </script>
+    <div class="row">
+        <label for="genre-name-input">Name:</label>
+        <input id="genre-name-input" name="name" th:value="*{name}" type="text" value="Pulp fiction" required/>
+    </div>
 
-    <script>
-    $(function () {
-        var queryString = window.location.search;
-        var urlParams = new URLSearchParams(queryString);
-        $.get('/api/genres/'+ urlParams.get('id')).done(function (genre) {
-                $('body').append(`
-                    <div class="row" hidden>
-                        <label for="id-input">ID:</label>
-                        <input id="id-input" name="id" value="${genre.id}" type="text" required/>
-                    </div>
-                    <div class="row">
-                        <label for="genre-name-input">Name:</label>
-                        <input id="genre-name-input" name="name" value="${genre.name}" type="text" required/>
-                    </div>
-                    <div class="row">
-                        <button onclick="putGenre()"/>Save</button>
-                        <a href="/genres">
-                            <button type="button">Cancel</button>
-                        </a>
-                    </div>
-                </form>
-                `)
-        })
-
-    });
-
-    </script>
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="genreList.html" th:href="@{/genres}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
 
 </body>
 </html>

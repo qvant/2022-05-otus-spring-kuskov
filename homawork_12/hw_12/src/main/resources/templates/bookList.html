@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>List of all books</title>
@@ -24,12 +24,11 @@
         }
 
     </style>
-    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<a href="/">Back to root</a>
+<a href="root.html" th:href="@{/}">Back to root</a>
 <br>
-<a href="bookCreate">Create new book</a>
+<a href="bookNew.html" th:href="@{/bookCreate}">Create new book</a>
 <table class="books">
     <thead>
     <tr>
@@ -44,37 +43,26 @@
     </tr>
     </thead>
     <tbody>
+    <tr th:each="book : ${books}">
+        <td hidden th:text="${book.id}">1</td>
+        <td th:text="${book.title}">Pulp fiction</td>
+        <td th:text="${book.isbn}">9999 9999 9999 9999</td>
+        <td th:text="${book.genre.name}">Роман</td>
+        <td th:text="${book.author.name}">Иванов Иван</td>
+        <td>
+            <a href="bookEdit.html" th:href="@{/bookEdit(id=${book.id})}">Edit</a>
+        </td>
+        <td>
+            <a href="bookDelete.html" th:href="@{/bookDelete(id=${book.id})}">Delete</a>
+        </td>
+        <td>
+            <a href="commentList.html" th:href="@{/comments(book_id=${book.id})}">View comments</a>
+        </td>
+    </tr>
     </tbody>
-    <script>
-    $(function () {
-        $.get('/api/books').done(function (books) {
-            books.forEach(function (book) {
-                $('tbody').append(`
-                    <tr>
-                        <td>${book.id}</td>
-                        <td>${book.title}</td>
-                        <td>${book.isbn}</td>
-                        <td>${book.genreName}</td>
-                        <td>${book.authorName}</td>
-                        <td>
-            <a href="/bookEdit?id=${book.id}">Edit</a>
-        </td>
-        <td>
-            <a href="/bookDelete?id=${book.id}">Delete</a>
-        </td>
-        <td>
-            <a href="/comments?book_id=${book.id}">View comments</a>
-        </td>
-                    </tr>
-                `)
-            });
-        })
-    });
-
-</script>
 </table>
-<a href="bookCreate">Create new book</a>
+<a href="bookNew.html" th:href="@{/bookCreate}">Create new book</a>
 <br>
-<a href="/">Back to root</a>
+<a href="root.html" th:href="@{/}">Back to root</a>
 </body>
 </html>
