@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create comment</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <h3>New comment:</h3>
+
+    <div class="row" hidden>
+        <label for="id-input">ID:</label>
+        <input id="id-input" name="bookId" value="" type="text" required/>
+    </div>
+
+    <div class="row">
+        <label for="comment-text-input">Text:</label>
+        <input id="comment-text-input" name="text" type="text" value="Отличная книга" required/>
+    </div>
+
+    <div class="row">
+        <button onclick="postComment()">Save</button>
+        <button onclick="cansel">Cancel</button>
+    </div>
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        val = document.getElementById('id-input');
+        val.value = urlParams.get('book_id')
+    });
+
+    </script>
+
+    <script>
+      function postComment() {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var data = {"bookId": document.getElementById('id-input').value,
+                    "text": document.getElementById('comment-text-input').value,
+        };
+        $.ajax({
+           url: '/api/comments/',
+           type: 'POST',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/comments?book_id=' + urlParams.get('book_id'));
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+
+    <script>
+      function cansel() {
+        var urlParams = new URLSearchParams(queryString);
+        $(location).prop('href', '/comments/' + urlParams.get('book_id'));
+      }
+    </script>
+
+</body>
+</html>
