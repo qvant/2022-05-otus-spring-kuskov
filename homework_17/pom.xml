@@ -89,7 +89,7 @@
 						</tags>
 					</to>
 					<from>
-						<image>bellsoft/liberica-openjdk-alpine-musl:19.0.1-11</image>
+						<image>bellsoft/liberica-openjdk-alpine-musl:19.0.1-11@sha256:7ed452eb660c529f1fc6a835909010c9c9abe90ed2438a9d595a06ebaa49aa5f</image>
 					</from>
 					<container>
 						<mainClass>ru.otus.spring.library.LibraryApplication</mainClass>
