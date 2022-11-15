@@ -18,4 +18,6 @@ insert into books(id, title, isbn, genre_id, author_id) values (5, 'Власте
 insert into comments(id, book_id, text) values (1, 1, 'Классика из школьной программы');
 insert into comments(id, book_id, text) values (2, 5, 'По ней еще фильм сняли');
 
+insert into users (id, name, password, is_locked) values (-1, 'admin', 'admin', false);
+
 commit;
