@@ -17,7 +17,8 @@ public class User implements UserDetails {
     @Column(name = "is_locked")
     private boolean isLocked;
 
-    public User(){};
+    public User() {
+    }
 
     public User(Long id, String name, String password, boolean isLocked) {
         this.id = id;
@@ -51,6 +52,10 @@ public class User implements UserDetails {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String getUsername() {
         return name;
@@ -74,9 +79,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
