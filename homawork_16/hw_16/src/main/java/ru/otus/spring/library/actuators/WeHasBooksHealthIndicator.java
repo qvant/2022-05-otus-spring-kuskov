@@ -7,13 +7,12 @@ import org.springframework.boot.actuate.health.Status;
 import org.springframework.stereotype.Component;
 import ru.otus.spring.library.repository.BookRepository;
 
-import java.time.LocalTime;
-
 @Component
 @RequiredArgsConstructor
 public class WeHasBooksHealthIndicator implements HealthIndicator {
 
     private final BookRepository bookRepository;
+
     @Override
     public Health health() {
         // Yes, I know that there must be exists query rather than count
