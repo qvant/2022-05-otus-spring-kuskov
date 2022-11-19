@@ -1,5 +1,6 @@
 package ru.otus.spring.library.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.library.domain.Author;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
 
@@ -47,6 +49,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Author> findAll() {
+        log.info("Find all authors in progress");
         return authorRepository.findAll();
     }
 

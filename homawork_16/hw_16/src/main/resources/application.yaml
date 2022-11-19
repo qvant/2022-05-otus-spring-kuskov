@@ -20,6 +20,22 @@ spring:
       enabled: true
       settings:
         web-allow-others: true
+  jmx:
+    enabled: true
 logging:
-  level:
-    root: WARN
+  file: logback.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, metrics, loggers"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    logfile:
+      enabled: true
+  health:
+    defaults:
+      enabled: true
