@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.otus.spring.library.domain.User;
 import ru.otus.spring.library.repository.UserRepository;
 
 @Service
@@ -14,10 +15,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByName(username);
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("user " + username + " not found");
-        }
-        return user.get();
+        User user = userRepository.findByName(username).orElseThrow(() -> new UsernameNotFoundException("user " + username + " not found"));
+        return user;
     }
 }
