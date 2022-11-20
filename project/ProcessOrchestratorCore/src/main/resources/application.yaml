@@ -9,6 +9,8 @@ spring:
     driver-class-name: org.postgresql.Driver
 
     initialization-mode: always
+  jmx:
+    enabled: true
   jpa:
     hibernate:
       ddl-auto: none
@@ -29,3 +31,18 @@ spring:
 logging:
   level:
     root: WARN
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    logfile:
+      enabled: true
+  health:
+    defaults:
+      enabled: true
