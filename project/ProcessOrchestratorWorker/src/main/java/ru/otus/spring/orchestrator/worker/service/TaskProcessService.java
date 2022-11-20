@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.orchestrator.worker.dto.TaskInstanceDto;
+import ru.otus.spring.orchestrator.worker.service.oracle.OracleService;
+import ru.otus.spring.orchestrator.worker.service.postgres.PostgresService;
 
 import java.time.Instant;
 
@@ -16,10 +18,12 @@ public class TaskProcessService {
 
     private static long TASK_TYPE_ORACLE_SQL = 1L;
     private static long TASK_TYPE_ORACLE_STORED_PROCEDURE = 2L;
+    private static long TASK_TYPE_POSTGRES_SQL = 3L;
 
     private static final Long STATUS_SUCCESS = 1L;
 
     private final OracleService oracleService;
+    private final PostgresService postgresService;
 
     public TaskInstanceDto processTask(TaskInstanceDto taskInstanceDto){
         if (taskInstanceDto.getTaskTypeId() == TASK_TYPE_ORACLE_SQL){
@@ -39,6 +43,20 @@ public class TaskProcessService {
         if (taskInstanceDto.getTaskTypeId() == TASK_TYPE_ORACLE_STORED_PROCEDURE){
             try {
                 var res = oracleService.processProcedureTask(taskInstanceDto);
+                res.setStatus(STATUS_SUCCESS);
+                res.setResult("");
+                return res;
+            }
+            catch (Exception exception){
+                log.error(exception.getMessage());
+                taskInstanceDto.setResult(exception.getMessage().substring(0, min(exception.getMessage().length(), 255)));
+                taskInstanceDto.setStatus(2L);
+                return taskInstanceDto;
+            }
+        }
+        if (taskInstanceDto.getTaskTypeId() == TASK_TYPE_POSTGRES_SQL){
+            try {
+                var res = postgresService.processSqlTask(taskInstanceDto);
                 res.setStatus(STATUS_SUCCESS);
                 res.setResult("");
                 return res;

@@ -6,6 +6,12 @@ spring:
     username: test_eod
     password: db
     driver-class-name: oracle.jdbc.OracleDriver
+  second-datasource:
+    #url: jdbc:h2:mem:testdb
+    url: jdbc:postgresql://localhost:5432/processes
+    username: test_eod
+    password: test_eod
+    driver-class-name: org.postgresql.Driver
 
     #url: jdbc:h2:mem:testdb
     #url: jdbc:postgresql://localhost:5432/processes
