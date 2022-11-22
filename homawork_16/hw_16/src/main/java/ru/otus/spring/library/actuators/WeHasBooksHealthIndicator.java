@@ -16,9 +16,9 @@ public class WeHasBooksHealthIndicator implements HealthIndicator {
     @Override
     public Health health() {
         // Yes, I know that there must be exists query rather than count
-        var books = bookRepository.findAll();
-        if (books.size() > 0) {
-            return Health.up().status(Status.UP).withDetail("message", "We have " + books.size() + " books").build();
+        Long bookCount = bookRepository.count();
+        if (bookCount > 0) {
+            return Health.up().status(Status.UP).withDetail("message", "We have " + bookCount + " books").build();
         }
         return Health.down().status(Status.DOWN).withDetail("message", "Library is empty").build();
     }

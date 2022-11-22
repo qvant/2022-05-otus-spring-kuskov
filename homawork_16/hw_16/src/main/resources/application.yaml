@@ -23,12 +23,14 @@ spring:
   jmx:
     enabled: true
 logging:
-  file: logback.xml
+  file:
+    name: library.log
+    path: logs
 management:
   endpoints:
     web:
       exposure:
-        include: "health, metrics, loggers"
+        include: "health, metrics, logfile"
   endpoint:
     health:
       show-details: always
