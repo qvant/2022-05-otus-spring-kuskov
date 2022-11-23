@@ -92,6 +92,7 @@ public class DependencyService {
             // All parents with such dependency in the DAG should succeed
             if (dependency.getType().equals(DEPENDENCY_ALL_PARENTS_SUCCESS)){
                 if (Objects.equals(taskStatus, TASK_STATUS_SUCCESS)){
+                    // TODO: rewrite all
                     List<Dependency> allParentTasks = dependencyRepository.findByTaskAndType(dependency.getTask().getId(), DEPENDENCY_ALL_PARENTS_SUCCESS);
                     List<TaskInstance> tasksInRun = taskInstanceRepository.findByRootTaskInstanceId(rootTaskInstanceId);
                     boolean allSuccess = true;
