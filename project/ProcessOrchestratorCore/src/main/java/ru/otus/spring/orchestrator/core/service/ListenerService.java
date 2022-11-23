@@ -1,5 +1,6 @@
 package ru.otus.spring.orchestrator.core.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class ListenerService {
 
     @RabbitListener(queues = {RESULT_QUEUE_NAME})
     @SneakyThrows
-    public void listen(String message) {
+    public void listen(String message) throws JsonProcessingException {
         log.warn("Received message " + message);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -35,10 +36,10 @@ public class ListenerService {
         TaskInstance taskInstance;
         try {
             taskInstance = taskInstanceService.findById(taskInstanceDto.getId());
-            List<Task> dependentTasks =  dependencyService.getReadyDependencies(taskInstance.getTask().getId(), taskInstanceDto.getStatus(), taskInstance.getRootTaskInstanceId());
+            List<Task> dependentTasks =  dependencyService.getReadyDependencies(taskInstance.getTask().getId(), taskInstanceDto.getStatus(), taskInstance.getRootTaskInstanceId(), taskInstance.getTask().getId());
             for (Task task: dependentTasks
                  ) {
-                taskService.scheduleRun(task.getId(), taskInstance.getStartedTime(), taskInstance.getRootTaskInstanceId());
+                taskService.scheduleRun(task.getId(), taskInstance.getStartedTime(), taskInstance.getId());
             }
         }catch (Exception exception){
             log.error(exception.getMessage());

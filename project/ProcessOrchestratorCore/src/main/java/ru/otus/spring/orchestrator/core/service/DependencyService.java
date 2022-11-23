@@ -63,7 +63,7 @@ public class DependencyService {
         dependencyRepository.deleteById(id);
     }
 
-    public List<Task> getReadyDependencies(Long taskId, Long taskStatus, Long rootTaskInstanceId)
+    public List<Task> getReadyDependencies(Long taskId, Long taskStatus, Long rootTaskInstanceId, Long troggeredTaskId)
     {
         Task initTask = taskRepository.getById(taskId);
         System.out.println("_______________________");
@@ -97,13 +97,20 @@ public class DependencyService {
                     boolean allSuccess = true;
                     for (Dependency parentTask: allParentTasks
                          ) {
+                        if (parentTask.getTaskParent().getId().equals(troggeredTaskId)){
+                            continue;
+                        }
                         boolean found = false;
                         for (TaskInstance task: tasksInRun
                              ) {
-                            if (task.getStatus().equals(TASK_STATUS_SUCCESS) && task.getTaskTypeId().equals(parentTask.getType())){
+                            if (task.getStatus().equals(TASK_STATUS_SUCCESS) && task.getTask().getId().equals(parentTask.getTaskParent().getId())){
                                 found = true;
                                 break;
                             }
+//                            if (task.getId().equals(troggeredTaskId) && task.getTaskTypeId().equals(parentTask.getType())){
+//                                found = true;
+//                                break;
+//                            }
                         }
                         if (!found){
                             allSuccess = false;

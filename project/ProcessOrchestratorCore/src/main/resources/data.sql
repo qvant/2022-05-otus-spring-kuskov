@@ -17,4 +17,12 @@ insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (
 insert into dependencies(id , dependency_type_id, task_parent_id , task_id) values (-2, 2, -4, -7);
 
 insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-8, 'Test Postgres task ', 'update process_test.eods set dt_eod = dt_eod + 1', '2022-10-01',  -1, 3);
+
+insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-9, 'Continue EOD task thread 1', 'pck_switch_eod.calc_some_data', null,  -1, 2);
+insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-10, 'Continue EOD task thread 2', 'pck_switch_eod.calc_other_data', null,  -1, 2);
+insert into dependencies(id , dependency_type_id, task_parent_id , task_id) values (-3, 1, -3, -9);
+insert into dependencies(id , dependency_type_id, task_parent_id , task_id) values (-4, 1, -3, -10);
+insert into tasks (id, name, code, next_run, schedule_id, task_type_id) values (-11, 'Finish EOD task ', 'pck_switch_eod.close_eod', null,  -1, 2);
+insert into dependencies(id , dependency_type_id, task_parent_id , task_id) values (-5, 3, -9, -11);
+insert into dependencies(id , dependency_type_id, task_parent_id , task_id) values (-6, 3, -10, -11);
 commit;

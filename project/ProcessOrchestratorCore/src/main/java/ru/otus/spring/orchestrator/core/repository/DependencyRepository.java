@@ -9,5 +9,6 @@ import java.util.List;
 public interface DependencyRepository extends JpaRepository<Dependency, Long> {
     @Query("select d from Dependency d where d.taskParent.id = ?1")
     List<Dependency> findByTaskParent(Long taskParent);
+    @Query("select d from Dependency d where d.task.id = ?1 and d.type = ?2")
     List<Dependency> findByTaskAndType(Long task, Long type);
 }

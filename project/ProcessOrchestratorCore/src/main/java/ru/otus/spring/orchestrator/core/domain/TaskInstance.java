@@ -130,6 +130,9 @@ public class TaskInstance {
     }
 
     public Long getStatus() {
+        if (status == null){
+            return 0L;
+        }
         return status;
     }
 

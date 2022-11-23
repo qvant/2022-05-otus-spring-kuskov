@@ -27,6 +27,9 @@ public class Schedule {
     }
 
     public Instant calcNextDate(Instant previousRun){
+        if (seconds == null || previousRun == null){
+            return null;
+        }
         return previousRun.plusSeconds(+ seconds );
     }
 
