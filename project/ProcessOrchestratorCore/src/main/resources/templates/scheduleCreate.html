@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create schedule</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <h3>Schedule Info:</h3>
+
+    <script>
+      function postSchedule() {
+        var data = {"name": document.getElementById('schedule-name-input').value,
+                    "seconds": document.getElementById('schedule-seconds-input').value
+                    };
+        if (!data["name"]) {
+            alert( 'Name must be specified!' );
+            return;
+        }
+        $.ajax({
+           url: '/api/schedules/',
+           type: 'POST',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/schedules');
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+
+    <div class="row">
+        <label for="schedule-name-input">Name:</label>
+        <input id="schedule-name-input" name="name" type="text" value="Some schedule" required/>
+    </div>
+
+    <div class="row">
+        <label for="schedule-seconds-input">Seconds:</label>
+        <input id="schedule-seconds-input" name="seconds" type="number" value="60" required/>
+    </div>
+
+    <div class="row">
+        <button onclick="postSchedule()">Save</button>
+        <a href="schedules">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+
+</body>
+</html>

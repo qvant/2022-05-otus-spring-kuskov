@@ -1,0 +1,48 @@
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    #url: jdbc:h2:mem:testdb
+    url: jdbc:postgresql://localhost:5432/processes
+    username: process_orchestrator
+    password: db
+    driver-class-name: org.postgresql.Driver
+
+    initialization-mode: always
+  jmx:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    #show-sql: true
+    database: postgresql
+    #defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+      schema-locations: schema.sql
+#  h2:
+#    console:
+#      path: /h2-console
+#      enabled: true
+#      settings:
+#        web-allow-others: true
+logging:
+  level:
+    root: WARN
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    logfile:
+      enabled: true
+  health:
+    defaults:
+      enabled: true

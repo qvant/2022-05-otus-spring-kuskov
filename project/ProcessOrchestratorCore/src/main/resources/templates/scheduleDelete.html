@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Delete schedule</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <h3>Schedule Info:</h3>
+
+    <script>
+      function deleteSchedule() {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        $.ajax({
+           url: '/api/schedules/'+ urlParams.get('id'),
+           type: 'DELETE',
+           async: false,
+           success: function(result) {
+                $(location).prop('href', '/schedules')
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+
+        $.get('/api/schedules/'+ urlParams.get('id')).done(function (schedule) {
+                $('body').append(`
+                    <div class="row" hidden>
+                        <label for="id-input">ID:</label>
+                        <input id="id-input" value="${schedule.id}" type="text" required/>
+                    </div>
+                    <div class="row">
+                        <label for="schedule-name-input">Name:</label>
+                        <input id="schedule-name-input" value="${schedule.name}" type="text" readonly/>
+                    </div>
+                    <div class="row">
+                        <label for="schedule-seconds-input">Seconds:</label>
+                        <input id="schedule-seconds-input" value="${schedule.seconds}" type="number" readonly/>
+                    </div>
+                    <div class="row">
+                        <button onclick="deleteSchedule()">Delete</button>
+                        <a href="/schedules">
+                            <button type="button">Cancel</button>
+                        </a>
+                    </div>
+                `)
+        })
+
+    });
+
+    </script>
+
+
+</body>
+</html>

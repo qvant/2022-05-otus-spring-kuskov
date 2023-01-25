@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all schedules</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .schedules {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .schedules tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .schedules td:last-child, td:first-child {
+            width: 50px;
+        }
+
+
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<a href="/">Back to root</a>
+<br>
+<a href="/scheduleCreate">Create new schedule</a>
+<table class="schedules">
+    <thead>
+    <tr>
+        <th hidden>ID</th>
+        <th>Name</th>
+        <th>Seconds</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<script>
+    $(function () {
+        $.get('/api/schedules/').done(function (schedules) {
+            schedules.forEach(function (schedule) {
+                $('tbody').append(`
+                    <tr>
+                        <td hidden>${schedule.id}</td>
+                        <td>${schedule.name}</td>
+                        <td>${schedule.seconds}</td>
+                        <td>
+                            <a href="/scheduleEdit?id=${schedule.id}">Edit</a>
+                        </td>
+                        <td>
+                            <a href="/scheduleDelete?id=${schedule.id}">Delete</a>
+                        </td>
+                    </tr>
+                `)
+            });
+        })
+    });
+</script>
+<a href="/scheduleCreate">Create new schedule</a>
+<br>
+<a href="/">Back to root</a>
+</body>
+</html>

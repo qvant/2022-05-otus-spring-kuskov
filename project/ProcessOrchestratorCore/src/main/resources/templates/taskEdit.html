@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit task</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+    <script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <script>
+      function putTask() {
+
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+        var data = {"id": document.getElementById('task-id-input').value,
+                    "name": document.getElementById('task-name-input').value,
+                    "code": document.getElementById('task-code-input').value,
+                    "schedule": {
+                                    "id": document.getElementById('task-schedule-input').value,
+                                    "name": document.getElementById('task-schedule-input').text
+                                },
+                    "taskType": {
+                                    "id": document.getElementById('task-task-type-input').value,
+                                    "name": document.getElementById('task-task-type-input').text
+                                }
+                    };
+        if (!data["name"]) {
+            alert( 'Name must be specified!' );
+            return;
+        }
+        if (!data["taskType"]) {
+            alert( 'Task type must be specified!' );
+            return;
+        }
+        $.ajax({
+           url: '/api/tasks/'+ urlParams.get('id'),
+           type: 'PUT',
+           contentType: 'application/json',
+           data: JSON.stringify(data),
+           success: function(result) {
+                $(location).prop('href', '/tasks')
+            },
+            error: function(result) {
+                console.log(result);
+                },
+        });
+      }
+    </script>
+    <h3>Task info:</h3>
+    <div class="row" hidden>
+        <label for="task-id-input">ID:</label>
+        <input id="task-id-input" name="id" value="" type="text" required/>
+    </div>
+    <div class="row">
+        <label for="task-name-input">Name:</label>
+        <input id="task-name-input" name="name" type="text" required/>
+    </div>
+
+    <div class="row">
+        <label for="task-code-input">Code:</label>
+        <input id="task-code-input" name="code" type="text" required/>
+    </div>
+
+    <div class="row">
+        <label for="task-next_run-input">Next run date:</label>
+        <input id="task-next_run-input" name="next_run" type="datetime-local" required/>
+    </div>
+
+    <div class="row">
+        <label for="task-schedule-input">Schedule:</label>
+        <select id="task-schedule-input" name="schedule"></select>
+    </div>
+    <div class="row">
+        <label for="task-task-type-input">Type:</label>
+        <select id="task-task-type-input" name="taskType"></select>
+    </div>
+    <div class="row">
+        <button onclick="putTask()">Save</button>
+        <a href="/tasks">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+    <script>
+    $(function () {
+        var queryString = window.location.search;
+        var urlParams = new URLSearchParams(queryString);
+
+        $.get('/api/tasks/' + urlParams.get('id')).done(function (task) {
+            val = document.getElementById('task-id-input');
+            val.value = task.id
+            val = document.getElementById('task-name-input');
+            val.value = task.name
+            val = document.getElementById('task-code-input');
+            val.value = task.code
+            val = document.getElementById('task-next_run-input');
+            val.value = task.nextRun
+
+
+            $.get('/api/schedules').done(function (schedules) {
+                select = document.getElementById('task-schedule-input');
+                schedules.forEach(function (schedule) {
+                    var option = document.createElement('option');
+                    option.value = schedule.id
+                    option.text = schedule.name
+                    select.appendChild(option)
+                    if (schedule.id == task.schedule.id){
+                        select.value = schedule.id
+                        option.selected = 'selected'
+                    }
+                });
+            })
+            $.get('/api/taskTypes').done(function (taskTypes) {
+                select = document.getElementById('task-task-type-input');
+                taskTypes.forEach(function (taskType) {
+                    var option = document.createElement('option');
+                    option.value = taskType.id
+                    option.text = taskType.name
+                    select.appendChild(option)
+                    if (taskType.id == task.taskType.id){
+                        select.value = taskType.id
+                        option.selected = 'selected'
+                    }
+                });
+            })
+        })
+    });
+
+    </script>
+
+</body>
+</html>

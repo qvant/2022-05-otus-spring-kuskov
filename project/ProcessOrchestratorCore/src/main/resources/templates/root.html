@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Process orchestrator</title>
+</head>
+<body>
+<h3>Process orchestrator main</h3>
+<ul>
+    <li>
+        <a href="dependenciesList.html" th:href="@{/dependencies}">Task dependencies</a>
+    </li>
+    <li>
+        <a href="taskInstancesList.html" th:href="@{/taskInstances}">Task instances</a>
+    </li>
+    <li>
+        <a href="taskTypesList.html" th:href="@{/taskTypes}">Task types</a>
+    </li>
+    <li>
+        <a href="taskList.html" th:href="@{/tasks}">Tasks</a>
+    </li>
+    <li>
+        <a href="scheduleList.html" th:href="@{/schedules}">Schedules</a>
+    </li>
+    <li>
+        <a href="scheduleList.html" th:href="@{/actuator}">Actuator</a>
+    </li>
+</ul>
+</body>
+</html>
