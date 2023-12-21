@@ -1,0 +1,43 @@
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+      data-locations: data.sql
+      schema-locations: schema.sql
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+      settings:
+        web-allow-others: true
+  jmx:
+    enabled: true
+logging:
+  file:
+    name: library.log
+    path: logs
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, metrics, logfile"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    logfile:
+      enabled: true
+  health:
+    defaults:
+      enabled: true
